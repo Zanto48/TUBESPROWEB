@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WarLok — Fitur 3: Ulasan Komunitas</title>
+  <!-- Framework CDN Tailwind CSS v4 -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-[#F5F5F5] text-[#2C3E50] font-sans p-6">
+
+  <!-- KONTEN FITUR (Tanpa Sidebar & Header agar tidak dobel saat dipanggil di index.html) -->
+  <main class="max-w-7xl mx-auto">
+<!-- ================================================================= -->
+      <!-- FITUR 3: ULASAN & VOTING STOK (PIC: Muhammad Sayyid Huwaidi)      -->
+      <!-- ================================================================= -->
+      <section id="halaman-ulasan" class="space-y-6 ">
+
+        <div class="bg-white p-6 rounded-xl border border-gray-200">
+          <h2 class="text-2xl font-bold text-[#2C3E50] mt-2">Ulasan Toko, Voting Ketersediaan & Laporan Stok</h2>
+          <p class="text-sm text-gray-500">Pelaporan stok toko yang tidak akurat, voting ketersediaan barang oleh pengguna, serta ulasan dan rating pelayanan toko.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <!-- Kolom Kiri: Voting Ketersediaan Barang & Daftar Ulasan -->
+          <div class="space-y-6">
+            <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-3">
+              <h3 class="text-base font-bold text-[#2C3E50]">Voting Ketersediaan Barang oleh Pengguna</h3>
+              <p class="text-xs text-gray-500">Apakah stok barang di warung sesuai dengan yang tertulis di aplikasi?</p>
+
+              <div class="p-3 bg-[#F5F5F5] rounded-lg flex justify-between items-center text-xs">
+                <div>
+                  <p class="font-bold text-[#2C3E50]">Tolak Angin Cair — Warung Bu Siti</p>
+                  <p class="text-gray-500">Tertulis: Tersedia (28 sachet)</p>
+                </div>
+                <div class="flex gap-2">
+                  <button type="button" onclick="tampilPesan('Terima kasih! Voting Stok Sesuai berhasil dikirim.')" class="px-3 py-1.5 bg-green-600 text-white font-bold rounded cursor-pointer">👍 Sesuai (42)</button>
+                  <button type="button" onclick="tampilPesan('Laporan Stok Kosong telah dicatat.')" class="px-3 py-1.5 bg-[#E74C3C] text-white font-bold rounded cursor-pointer">👎 Kosong (0)</button>
+                </div>
+              </div>
+
+              <div class="p-3 bg-[#F5F5F5] rounded-lg flex justify-between items-center text-xs">
+                <div>
+                  <p class="font-bold text-[#2C3E50]">Gas LPG 3kg — Kelontong Pak RT</p>
+                  <p class="text-gray-500">Tertulis: Tersedia (2 tabung)</p>
+                </div>
+                <div class="flex gap-2">
+                  <button type="button" onclick="tampilPesan('Terima kasih! Voting Stok Sesuai berhasil dikirim.')" class="px-3 py-1.5 bg-green-600 text-white font-bold rounded cursor-pointer">👍 Sesuai (5)</button>
+                  <button type="button" onclick="tampilPesan('Laporan Stok Kosong telah dicatat.')" class="px-3 py-1.5 bg-[#E74C3C] text-white font-bold rounded cursor-pointer">👎 Kosong (8)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Daftar Ulasan Komunitas -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-3 text-xs">
+              <h3 class="text-base font-bold text-[#2C3E50]">Ulasan & Rating Pelayanan Toko</h3>
+              <div class="p-3 bg-[#F5F5F5] rounded-lg">
+                <div class="flex justify-between font-bold">
+                  <span>Dimas Pratama (Mahasiswa) — Warung Bu Siti</span>
+                  <span class="text-yellow-600">★★★★★ (5.0)</span>
+                </div>
+                <p class="text-gray-600 mt-1">"Stok Indomie dan telur sangat akurat sesuai aplikasi. Ibu pemilik warung ramah dan cepat menyiapkan barang."</p>
+              </div>
+              <div class="p-3 bg-[#F5F5F5] rounded-lg">
+                <div class="flex justify-between font-bold">
+                  <span>Fajar Nugroho — Kelontong Pak RT</span>
+                  <span class="text-yellow-600">★★☆☆☆ (2.0)</span>
+                </div>
+                <p class="text-gray-600 mt-1">"Di web tertulis gas 3kg masih ada, tapi waktu saya datangi ternyata sudah habis."</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kolom Kanan: Form Kirim Ulasan & Lapor Stok Tidak Akurat -->
+          <div class="bg-white p-6 rounded-xl border border-gray-200">
+            <h3 class="text-base font-bold text-[#2C3E50] mb-4">Form Ulasan & Pelaporan Stok Tidak Akurat</h3>
+            <form onsubmit="event.preventDefault(); tampilPesan('Ulasan dan laporan akurasi stok berhasil dikirim!');" class="space-y-3 text-xs">
+              <div>
+                <label class="block font-bold mb-1">Pilih Nama Toko / Warung</label>
+                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                  <option>Warung Bu Siti (Radius 85m)</option>
+                  <option>Warung Madura 24 Jam (Radius 140m)</option>
+                  <option>Kelontong Pak RT (Radius 340m)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold mb-1">Status Akurasi Stok Saat Didatangi</label>
+                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                  <option>✔ Stok & Harga Akurat Sesuai Aplikasi</option>
+                  <option>🚨 Laporan: Tertulis Tersedia tapi Barang Habis (Stok Fiktif)</option>
+                  <option>⚠️ Laporan: Harga di Kasir Berbeda dengan Aplikasi</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold mb-1">Rating Pelayanan Toko</label>
+                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                  <option>★★★★★ (5 - Sangat Memuaskan)</option>
+                  <option>★★★★☆ (4 - Baik)</option>
+                  <option>★★★☆☆ (3 - Cukup)</option>
+                  <option>★★☆☆☆ (2 - Kurang Akurat)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block font-bold mb-1">Tulis Ulasan / Keterangan Laporan</label>
+                <textarea rows="3" placeholder="Tuliskan ulasan pelayanan warung atau detail laporan stok..." required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg"></textarea>
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-[#E74C3C] hover:bg-red-700 text-white font-bold rounded-lg cursor-pointer">
+                Kirim Ulasan / Laporan Stok
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </section>
+  </main>
+
+  <!-- Notifikasi Popup Sederhana -->
+  <div id="kotakPesan" class="fixed bottom-5 right-5 bg-[#2C3E50] text-white px-4 py-3 rounded-xl shadow-lg text-xs font-semibold hidden">
+    Info: Aksi berhasil dijalankan!
+  </div>
+
+  <!-- SCRIPT SEDERHANA UNTUK FITUR -->
+  <script>
+    // 1. Pindah ke file fitur lain di dalam iframe
+    function bukaHalaman(namaFitur) {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ tipe: 'PINDAH_MENU', fitur: namaFitur }, '*');
+      }
+      window.location.href = namaFitur + '.html';
+    }
+
+    // 2. Fungsi Quick-Toggle status barang (khusus halaman Inventaris)
+    function ubahToggle(tombol) {
+      if (tombol.textContent.includes('Aktif')) {
+        tombol.textContent = 'Nonaktif (Habis)';
+        tombol.className = 'px-3 py-1 bg-gray-400 text-white font-bold rounded-full cursor-pointer';
+      } else {
+        tombol.textContent = 'Aktif (Tersedia)';
+        tombol.className = 'px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer';
+      }
+    }
+
+    // 3. Tampilkan pesan popup sederhana
+    function tampilPesan(teks) {
+      const kotak = document.getElementById('kotakPesan');
+      kotak.textContent = teks;
+      kotak.classList.remove('hidden');
+      setTimeout(function() {
+        kotak.classList.add('hidden');
+      }, 2500);
+    }
+
+
+  </script>
+</body>
+</html>

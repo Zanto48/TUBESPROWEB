@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WarLok — Menu Utama (index.html)</title>
+    <!-- Framework CDN Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-[#F5F5F5] text-[#2C3E50] font-sans">
+
+  <!-- LAYOUT UTAMA LAPTOP: SIDEBAR KIRI (#2C3E50) & AREA PEMANGGIL FITUR DI KANAN -->
+  <div class="min-h-screen flex flex-col lg:flex-row">
+
+    <!-- ================= 1. SIDEBAR KIRI (MENU UTAMA) ================= -->
+    <aside class="w-full lg:w-64 bg-[#2C3E50] text-white flex flex-col justify-between p-4 shrink-0 lg:min-h-screen">
+      <div>
+        <!-- Logo Aplikasi -->
+        <div class="flex items-center gap-3 pb-4 border-b border-slate-600">
+          <div class="w-10 h-10 rounded-xl bg-[#E74C3C] flex items-center justify-center font-bold text-lg">🏪</div>
+          <div>
+            <h1 class="text-base font-bold leading-none">WarLok Dasbor</h1>
+            <p id="labelRoleSidebar" class="text-[11px] text-gray-300 mt-1 uppercase">MITRA WARUNG</p>
+          </div>
+        </div>
+
+        <!-- Simulasi Ganti 3 Peran Pengguna (Konsumen, Merchant, Admin) -->
+        <div class="my-4 bg-slate-800 p-2 rounded-xl">
+          <p class="text-[10px] text-gray-400 uppercase font-bold mb-1.5 px-1">Pilih Peran (User Role):</p>
+          <div class="grid grid-cols-3 gap-1 text-[11px]">
+            <button type="button" onclick="gantiRole('merchant', 'MITRA WARUNG', 'Selamat Datang, Warung ciganitri', this)" class="role-btn py-1 rounded bg-[#E74C3C] text-white font-bold cursor-pointer">Merchant</button>
+            <button type="button" onclick="gantiRole('konsumen', 'KONSUMEN / MAHASISWA', 'Halo, Kelompok 7', this)" class="role-btn py-1 rounded text-gray-300 hover:bg-slate-700 cursor-pointer">Konsumen</button>
+            <button type="button" onclick="gantiRole('admin', 'ADMINISTRATOR', 'Halo, Admin ', this)" class="role-btn py-1 rounded text-gray-300 hover:bg-slate-700 cursor-pointer">Admin</button>
+          </div>
+        </div>
+
+        <!-- Menu Navigasi Pemanggil File HTML Berdasarkan Role -->
+        <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 px-2 mb-2">MENU UTAMA</p>
+        <nav class="space-y-1" id="sidebarNav">
+          <!-- Tombol-tombol menu akan diatur visibilitas/ketersediaannya secara dinamis via JS -->
+          <button type="button" id="nav-dashboard" data-feature="dashboard" onclick="panggilFitur('dashboard.html', 'Fitur 6: Dashboard Analitik', 'I Putu Gede Agastya Krisna Widartha', this)" class="menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-[#2C3E50] flex items-center gap-2.5 cursor-pointer">
+            <span></span> <span>Overview (Dashboard)</span>
+          </button>
+          <button type="button" id="nav-inventaris" data-feature="inventaris" onclick="panggilFitur('inventaris.html', 'Fitur 1: Inventaris Toko', 'Dhafy Ahmad Zubaidi', this)" class="menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:bg-white/10 flex items-center gap-2.5 cursor-pointer">
+            <span></span> <span>Kelola Stok (Inventaris)</span>
+          </button>
+          <button type="button" id="nav-showcase" data-feature="showcase" onclick="panggilFitur('showcase.html', 'Fitur 2: Showcase & Radius', 'Rayfito Krisna Wijaya', this)" class="menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:bg-white/10 flex items-center gap-2.5 cursor-pointer">
+            <span></span> <span>Showcase & Radius</span>
+          </button>
+          <button type="button" id="nav-reservasi" data-feature="reservasi" onclick="panggilFitur('reservasi.html', 'Fitur 5: Reservasi Barang', 'Rakha Abdillah Alkautsar', this)" class="menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:bg-white/10 flex items-center gap-2.5 cursor-pointer">
+            <span></span> <span>Reservasi Barang</span>
+          </button>
+          <button type="button" id="nav-ulasan" data-feature="ulasan" onclick="panggilFitur('ulasan.html', 'Fitur 3: Ulasan Komunitas', 'Muhammad Sayyid Huwaidi', this)" class="menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:bg-white/10 flex items-center gap-2.5 cursor-pointer">
+            <span></span> <span>Ulasan Komunitas</span>
+          </button>
+          <button type="button" id="nav-autentikasi" data-feature="autentikasi" onclick="panggilFitur('autentikasi.html', 'Fitur 4: Autentikasi & Verifikasi Toko', 'William Peter Vanx Najoan', this)" class="menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:bg-white/10 flex items-center gap-2.5 cursor-pointer">
+            <span></span> <span>Verifikasi & Profil Toko</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Kartu Bantuan di Bawah Sidebar -->
+      <div class="pt-4 border-t border-slate-600 mt-6">
+        <div class="bg-slate-800 p-3 rounded-xl flex items-center gap-3">
+          <span class="w-8 h-8 rounded-full bg-[#E74C3C] flex items-center justify-center text-sm">🎧</span>
+          <div>
+            <p class="text-xs font-bold">Bantuan Warung</p>
+            <p class="text-[10px] text-gray-400">Hubungi Admin 24/7</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ================= 2. AREA KANAN (HEADER & PEMANGGIL FILE FITUR) ================= -->
+    <div class="flex-1 flex flex-col min-h-screen">
+
+      <!-- Header Atas -->
+      <header class="bg-white border-b border-gray-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 id="sapaanHeader" class="text-base font-bold text-[#2C3E50]">Selamat Datang, Warung Ciganitri</h2>
+          <p class="text-xs text-gray-500">Ringkasan performa dan operasional kios harian</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="text" placeholder="🔍 Cari barang, faktur, pembeli..." class="px-4 py-1.5 bg-[#F5F5F5] border border-gray-300 rounded-full text-xs w-60" />
+          <span class="px-3 py-1.5 bg-[#F5F5F5] border border-gray-300 rounded-lg text-xs font-semibold">📅 29 Okt 2026</span>
+          <span class="p-2 bg-[#F5F5F5] rounded-lg border border-gray-300 text-xs">🔔</span>
+          <span class="w-8 h-8 rounded-full bg-[#2C3E50] text-white flex items-center justify-center text-xs font-bold">👤</span>
+        </div>
+      </header>
+
+      <!-- Wadah Pemanggil File HTML dari PIC Lain -->
+      <main class="flex-1 flex flex-col">
+        <iframe id="frameFitur" class="w-full flex-1 border-0 min-h-[88vh]"></iframe>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ================= 3. SCRIPT PEMANGGIL & PENGATUR ROLE ================= -->
+  <script>
+    // Konfigurasi hak akses (authorization mapping) per role
+    const rolePermissions = {
+      merchant: ['dashboard', 'inventaris', 'autentikasi'],
+      konsumen: ['dashboard', 'showcase', 'reservasi', 'ulasan', 'autentikasi'],
+      admin: ['dashboard', 'inventaris', 'showcase', 'reservasi', 'ulasan', 'autentikasi']
+    };
+
+    let currentRole = 'merchant';
+    let activeFeatureFile = 'dashboard.html';
+    let activeFeatureName = 'Fitur 6: Dashboard Analitik';
+    let activePicName = 'I Putu Gede Agastya Krisna Widartha';
+    let activeBtnElement = null;
+
+    function panggilFitur(namaFile, judulFitur, namaPic, tombolAktif) {
+      const featureKey = tombolAktif ? tombolAktif.getAttribute('data-feature') : null;
+
+      // Cek apakah role saat ini diizinkan membuka fitur ini
+      if (featureKey && !rolePermissions[currentRole].includes(featureKey)) {
+        showAccessDeniedNotice(judulFitur);
+        return;
+      }
+
+      activeFeatureFile = namaFile;
+      activeFeatureName = judulFitur;
+      activePicName = namaPic;
+      activeBtnElement = tombolAktif;
+
+      const frame = document.getElementById('frameFitur');
+
+      // Ubah warna tombol menu sidebar yang sedang aktif
+      document.querySelectorAll('.menu-btn').forEach(function(btn) {
+        if (!btn.classList.contains('hidden')) {
+          btn.className = "menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:bg-white/10 flex items-center gap-2.5 cursor-pointer";
+        }
+      });
+      if (tombolAktif) {
+        tombolAktif.className = "menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-[#2C3E50] flex items-center gap-2.5 cursor-pointer";
+      }
+
+      // Jika dibuka di browser laptop (file dalam 1 folder), panggil file HTML-nya:
+      if (window.self === window.top) {
+        frame.removeAttribute('srcdoc');
+        frame.src = namaFile;
+      } else {
+        frame.srcdoc = `
+          <html>
+            <head><script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script></head>
+            <body class="bg-[#F5F5F5] text-[#2C3E50] font-sans p-6">
+              <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-2 shadow-sm">
+                <span class="bg-[#E74C3C] text-white text-xs font-bold px-2.5 py-1 rounded">PEMANGGIL FILE FITUR AKTIF</span>
+                <h2 class="text-2xl font-bold">${judulFitur}</h2>
+                <p class="text-sm text-gray-600">Memanggil file: <code class="font-bold text-[#E74C3C]">${namaFile}</code> (PIC: <b>${namaPic}</b>)</p>
+                <p class="text-xs text-gray-500">Akses disesuaikan untuk role: <span class="uppercase font-bold text-slate-800">${currentRole}</span>.</p>
+              </div>
+            </body>
+          </html>`;
+      }
+    }
+
+    function showAccessDeniedNotice(namaFitur) {
+      const frame = document.getElementById('frameFitur');
+      frame.removeAttribute('src');
+      frame.srcdoc = `
+        <html>
+          <head><script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"><\/script></head>
+          <body class="bg-[#F5F5F5] text-[#2C3E50] font-sans p-6 flex items-center justify-center min-h-[80vh]">
+            <div class="bg-white p-8 rounded-2xl border border-red-200 text-center max-w-md shadow-lg space-y-4">
+              <div class="w-16 h-16 bg-red-100 text-[#E74C3C] rounded-full flex items-center justify-center text-3xl mx-auto">🔒</div>
+              <h3 class="text-xl font-bold text-[#2C3E50]">Akses Dibatasi</h3>
+              <p class="text-xs text-gray-600 leading-relaxed">Peran <span class="uppercase font-bold text-[#E74C3C]">${currentRole}</span> tidak memiliki hak akses untuk membuka menu <strong class="text-slate-800">${namaFitur}</strong>.</p>
+              <button onclick="window.parent.resetToDefaultDashboard()" class="mt-2 px-4 py-2 bg-[#2C3E50] text-white text-xs font-bold rounded-xl cursor-pointer hover:bg-slate-700">Kembali ke Dashboard Utama</button>
+            </div>
+          </body>
+        </html>`;
+    }
+
+    function resetToDefaultDashboard() {
+      const dashBtn = document.getElementById('nav-dashboard');
+      panggilFitur('dashboard.html', 'Fitur 6: Dashboard Analitik', 'I Putu Gede Agastya Krisna Widartha', dashBtn);
+    }
+
+    function gantiRole(kodeRole, labelSidebar, teksSapaan, tombolRole) {
+      currentRole = kodeRole;
+      document.getElementById('labelRoleSidebar').textContent = labelSidebar;
+      document.getElementById('sapaanHeader').textContent = teksSapaan;
+      
+      document.querySelectorAll('.role-btn').forEach(function(b) {
+        b.className = "role-btn py-1 rounded text-gray-300 hover:bg-slate-700 cursor-pointer";
+      });
+      tombolRole.className = "role-btn py-1 rounded bg-[#E74C3C] text-white font-bold cursor-pointer";
+
+      // Perbarui visibilitas menu di sidebar berdasarkan role
+      updateSidebarMenuVisibility();
+
+      // Cek apakah halaman aktif saat ini diizinkan untuk role baru ini
+      const allowedFeatures = rolePermissions[kodeRole];
+      let currentActiveFeature = activeBtnElement ? activeBtnElement.getAttribute('data-feature') : 'dashboard';
+
+      if (!allowedFeatures.includes(currentActiveFeature)) {
+        // Jika tidak diizinkan, otomatis arahkan ke dashboard (overview)
+        const dashBtn = document.getElementById('nav-dashboard');
+        panggilFitur('dashboard.html', 'Fitur 6: Dashboard Analitik', 'I Putu Gede Agastya Krisna Widartha', dashBtn);
+      }
+
+      // Kirim sinyal perubahan role ke dalam iframe fitur yang sedang terbuka
+      const frame = document.getElementById('frameFitur');
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ tipe: 'GANTI_ROLE', role: kodeRole }, '*');
+      }
+    }
+
+    function updateSidebarMenuVisibility() {
+      const allowed = rolePermissions[currentRole];
+      const navButtons = document.querySelectorAll('#sidebarNav .menu-btn');
+
+      navButtons.forEach(function(btn) {
+        const feature = btn.getAttribute('data-feature');
+        if (allowed.includes(feature)) {
+          btn.classList.remove('hidden');
+        } else {
+          btn.classList.add('hidden');
+        }
+      });
+    }
+
+    // Sinkronkan highlight menu sidebar jika ada tombol di dalam iframe yang pindah halaman
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.tipe === 'PINDAH_MENU') {
+        const targetBtn = document.getElementById('nav-' + event.data.fitur);
+        if (targetBtn && !targetBtn.classList.contains('hidden')) {
+          document.querySelectorAll('.menu-btn').forEach(function(btn) {
+            if (!btn.classList.contains('hidden')) {
+              btn.className = "menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:bg-white/10 flex items-center gap-2.5 cursor-pointer";
+            }
+          });
+          targetBtn.className = "menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-[#2C3E50] flex items-center gap-2.5 cursor-pointer";
+          activeBtnElement = targetBtn;
+        }
+      }
+    });
+
+    window.onload = function() {
+      updateSidebarMenuVisibility();
+      panggilFitur('dashboard.html', 'Fitur 6: Dashboard Analitik', 'I Putu Gede Agastya Krisna Widartha', document.getElementById('nav-dashboard'));
+    };
+  </script>
+</body>
+</html>

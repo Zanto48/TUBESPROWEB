@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WarLok – Showcase</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand:   { DEFAULT: '#E74C3C', dark: '#ff6b5b', soft: '#fdecea' },
+          primary: { DEFAULT: '#2C3E50', light: '#3d5368' },
+          surface: '#F5F5F5'
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* Urban Minimalist micro-animations */
+  article { transition: box-shadow .18s ease, transform .18s ease; }
+  article:hover { box-shadow: 0 6px 24px rgba(44,62,80,.12); transform: translateY(-2px); }
+  button { transition: opacity .15s ease, background-color .15s ease, transform .1s ease; }
+  button:active { transform: scale(.97); }
+  input[type=search]::-webkit-search-cancel-button { display:none; }
+  ::-webkit-scrollbar { width:6px; height:6px; }
+  ::-webkit-scrollbar-track { background:#F5F5F5; }
+  ::-webkit-scrollbar-thumb { background:#2C3E50; border-radius:99px; }
+  .chip-active { background:#E74C3C !important; color:#fff !important; border-color:#E74C3C !important; }
+</style>
+</head>
+<body data-view="list" class="group bg-[#F5F5F5] text-[#2C3E50] text-[15px] antialiased min-h-screen">
+
+<main class="mx-auto max-w-6xl px-4 py-5">
+
+  <!-- ===== CARI & LOKASI ===== -->
+  <div class="mb-4 flex flex-wrap items-center gap-3">
+    <div class="relative flex-1 min-w-[240px]">
+      <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-gray-400">🔍</span>
+      <input id="q" type="search" placeholder="Cari produk (telur, air, beras, dll) atau nama toko..."
+             class="w-full rounded-xl border-2 border-[#2C3E50]/15 bg-white pl-10 pr-4 py-2 text-sm text-[#2C3E50] placeholder-gray-400 focus:border-[#E74C3C] focus:outline-none shadow-sm transition-colors">
+    </div>
+    <button id="loc" type="button" class="rounded-xl border-2 border-[#2C3E50]/15 bg-white px-4 py-2 text-sm font-semibold text-[#2C3E50] hover:border-[#E74C3C] hover:text-[#E74C3C] flex items-center gap-2 shadow-sm transition-colors">
+      <span>📍</span> <span>Lokasi Saya</span>
+    </button>
+  </div>
+
+  <!-- ===== FILTER ===== -->
+  <section class="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2" aria-label="Filter">
+    <div id="radius" class="flex gap-1.5" role="group" aria-label="Radius"></div>
+    <select id="cat" class="rounded-lg border-2 border-[#2C3E50]/15 bg-white px-2 py-1.5 text-[#2C3E50] focus:border-[#E74C3C] focus:outline-none">
+      <option value="">Semua kategori</option>
+      <option>Makanan instan</option><option>Bahan pokok</option><option>Minuman</option><option>Kebersihan</option>
+    </select>
+    <select id="sort" class="rounded-lg border-2 border-[#2C3E50]/15 bg-white px-2 py-1.5 text-[#2C3E50] focus:border-[#E74C3C] focus:outline-none">
+      <option value="dist">Terdekat</option><option value="price">Harga termurah</option><option value="rate">Rating tertinggi</option>
+    </select>
+    <label class="flex items-center gap-2 text-sm cursor-pointer select-none">
+      <input type="checkbox" id="onlyStock" class="accent-[#E74C3C] w-4 h-4"> Stok tersedia saja
+    </label>
+    <label class="flex items-center gap-2 text-sm cursor-pointer select-none">
+      <input type="checkbox" id="onlyOpen" class="accent-[#E74C3C] w-4 h-4"> Toko buka sekarang
+    </label>
+  </section>
+
+  <div class="mb-4 flex items-center justify-between gap-3">
+    <h1 id="count" aria-live="polite" class="text-xl font-bold text-[#2C3E50]"></h1>
+    <!-- Toggle Daftar/Peta, hanya muncul di mobile -->
+    <div class="seg flex overflow-hidden rounded-lg border-2 border-[#2C3E50]/15 bg-white lg:hidden" role="group" aria-label="Tampilan">
+      <button type="button" data-v="list" aria-pressed="true"
+              class="px-4 py-1.5 text-sm font-medium aria-pressed:bg-[#E74C3C] aria-pressed:text-white text-[#2C3E50]">Daftar</button>
+      <button type="button" data-v="map" aria-pressed="false"
+              class="px-4 py-1.5 text-sm font-medium aria-pressed:bg-[#E74C3C] aria-pressed:text-white text-[#2C3E50]">Peta</button>
+    </div>
+  </div>
+
+  <div class="gap-4 lg:grid lg:grid-cols-[1fr_380px] lg:items-start">
+    <div id="list" class="grid gap-3 pb-24 group-data-[view=map]:max-lg:hidden"></div>
+    <aside class="hidden rounded-xl border border-[#2C3E50]/10 bg-white p-2 shadow-sm group-data-[view=map]:block lg:sticky lg:top-24 lg:block">
+      <svg id="map" viewBox="0 0 360 340" class="block h-auto w-full" role="img" aria-label="Peta lokasi toko"></svg>
+
+    </aside>
+  </div>
+</main>
+
+<!-- ===== BAR BANDINGKAN ===== -->
+<div id="cmpbar" class="fixed inset-x-0 bottom-0 z-20 flex translate-y-full items-center justify-center gap-3 bg-[#2C3E50] px-4 py-3 text-white transition-transform motion-reduce:transition-none shadow-lg">
+  <span id="cmpn" class="font-medium"></span>
+  <button id="cmpgo" type="button" class="rounded-lg bg-[#E74C3C] px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-40 hover:opacity-90">Bandingkan</button>
+  <button id="cmpclr" type="button" class="rounded-lg border border-white/30 px-3 py-1.5 text-sm hover:bg-white/10">Hapus</button>
+</div>
+
+<!-- ===== DIALOG TABEL BANDINGKAN ===== -->
+<dialog id="dlg" class="w-[calc(100%-24px)] max-w-3xl rounded-2xl bg-white p-0 text-[#2C3E50] backdrop:bg-black/50 shadow-2xl">
+  <div class="flex items-center justify-between border-b border-[#2C3E50]/10 px-5 py-4 bg-[#2C3E50] rounded-t-2xl">
+    <h2 class="text-lg font-bold text-white">Bandingkan harga</h2>
+    <button id="dclose" type="button" class="rounded-lg border border-white/30 px-3 py-1 text-sm text-white hover:bg-white/10">Tutup</button>
+  </div>
+  <div id="ctable" class="overflow-x-auto px-5 pb-5 pt-2"></div>
+</dialog>
+
+<div id="toast" hidden class="fixed left-1/2 top-20 z-30 max-w-[90%] -translate-x-1/2 rounded-xl bg-[#2C3E50] px-4 py-2.5 text-sm text-white shadow-xl"></div>
+
+<script>
+// ============ DATA DUMMY ============
+// Field img: nama file gambar relatif
+var DATA = [
+  {id:1,  name:"Indomie Goreng 85 g",       store:"Warung Bu Ani",           ver:1, rate:4.6, dist:250,  open:1, price:3500,  stock:23, cat:"Makanan instan", img:"indomie goreng cabe ijo.jpeg", a:20,  rep:0},
+  {id:2,  name:"Telur Ayam 1 kg",           store:"Warung Bu Ani",           ver:1, rate:4.6, dist:250,  open:1, price:29000, stock:18, cat:"Bahan pokok",    img:"telur.jpeg",                   a:45,  rep:0},
+  {id:3,  name:"Air Mineral 600 ml",        store:"Warung Bu Ani",           ver:1, rate:4.6, dist:250,  open:1, price:3000,  stock:40, cat:"Minuman",        img:"air kemasan.jpeg",             a:70,  rep:0},
+  {id:4,  name:"Beras Ramos 5 kg",          store:"Warung Bu Ani",           ver:1, rate:4.6, dist:250,  open:1, price:73000, stock:8,  cat:"Bahan pokok",    img:"beras.jpeg",                   a:90,  rep:0},
+  {id:5,  name:"Indomie Soto 70 g",         store:"Warung Pak Dedi",         ver:1, rate:3.9, dist:420,  open:0, price:3200,  stock:12, cat:"Makanan instan", img:"indomie soto.jpeg",            a:275, rep:2},
+  {id:6,  name:"Sabun Cuci Piring 400 ml",  store:"Warung Pak Dedi",         ver:1, rate:3.9, dist:420,  open:0, price:12500, stock:5,  cat:"Kebersihan",     img:"sabun.jpeg",                   a:295, rep:0},
+  {id:7,  name:"Air Mineral 1500 ml",       store:"Warung Pak Dedi",         ver:1, rate:3.9, dist:420,  open:0, price:6000,  stock:10, cat:"Minuman",        img:"air kemasan.jpeg",             a:315, rep:0},
+  {id:8,  name:"Indomie Goreng 85 g",       store:"Toko Maju",               ver:1, rate:4.2, dist:700,  open:1, price:3300,  stock:4,  cat:"Makanan instan", img:"indomie goreng cabe ijo.jpeg", a:110, rep:0},
+  {id:9,  name:"Beras Premium 5 kg",        store:"Toko Maju",               ver:1, rate:4.2, dist:700,  open:1, price:72000, stock:15, cat:"Bahan pokok",    img:"beras.jpeg",                   a:130, rep:1},
+  {id:10, name:"Telur Ayam 1 kg",           store:"Toko Maju",               ver:1, rate:4.2, dist:700,  open:1, price:28500, stock:14, cat:"Bahan pokok",    img:"telur.jpeg",                   a:150, rep:0},
+  {id:11, name:"Indomie Goreng 85 g",       store:"Minimarket Kos Asri",     ver:1, rate:4.8, dist:1200, open:1, price:3600,  stock:40, cat:"Makanan instan", img:"indomie goreng cabe ijo.jpeg", a:195, rep:0},
+  {id:12, name:"Air Mineral 600 ml",        store:"Minimarket Kos Asri",     ver:1, rate:4.8, dist:1200, open:1, price:3500,  stock:60, cat:"Minuman",        img:"air kemasan.jpeg",             a:215, rep:0},
+  {id:13, name:"Sabun Cuci Piring 400 ml",  store:"Minimarket Kos Asri",     ver:1, rate:4.8, dist:1200, open:1, price:13000, stock:22, cat:"Kebersihan",     img:"sabun.jpeg",                   a:235, rep:0},
+  {id:14, name:"Indomie Goreng 85 g",       store:"Kelontong Sumber Rejeki", ver:1, rate:4.4, dist:2600, open:1, price:3400,  stock:0,  cat:"Makanan instan", img:"indomie goreng cabe ijo.jpeg", a:340, rep:0},
+  {id:15, name:"Beras Pandan Wangi 5 kg",   store:"Kelontong Sumber Rejeki", ver:1, rate:4.4, dist:2600, open:1, price:76000, stock:10, cat:"Bahan pokok",    img:"beras.jpeg",                   a:355, rep:0}
+];
+// Default: kata kunci kosong, radius 0 (Semua Jarak), urut jarak terdekat
+var S = {q:"", radius:0, cat:"", sort:"dist", onlyStock:false, onlyOpen:false, cmp:[]};
+
+// ============ HELPER ============
+var $ = function(i){ return document.getElementById(i); };
+var rp = function(n){ return "Rp " + n.toLocaleString("id-ID"); };
+var km = function(m){ return m < 1000 ? m + " m" : (m/1000).toFixed(1).replace(".", ",") + " km"; };
+var stk = function(n){
+  return n === 0 ? ["Habis",              "bg-red-100 text-red-700"]
+       : n <= 5  ? ["Menipis (" + n + ")", "bg-amber-100 text-amber-700"]
+                 : ["Tersedia (" + n + ")", "bg-[#fdecea] text-[#E74C3C]"];
+};
+var BTN     = "rounded-lg border-2 border-[#2C3E50]/15 bg-white px-3 py-1.5 text-sm font-medium text-[#2C3E50] hover:bg-[#F5F5F5] cursor-pointer";
+var BTN_PRI = "rounded-lg bg-[#E74C3C] px-3 py-1.5 text-sm font-semibold text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer";
+function toast(t){ var el=$("toast"); if(!el) return; el.textContent=t; el.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(function(){el.hidden=true},2200); }
+
+// ============ FILTER + URUTKAN ============
+function result(){
+  var q = S.q.trim().toLowerCase();
+  var r = DATA.filter(function(d){
+    var matchQ = !q || d.name.toLowerCase().indexOf(q) > -1 || d.store.toLowerCase().indexOf(q) > -1 || d.cat.toLowerCase().indexOf(q) > -1;
+    var matchDist = !S.radius || d.dist <= S.radius;
+    var matchCat = !S.cat || d.cat === S.cat;
+    var matchStock = !S.onlyStock || d.stock > 0;
+    var matchOpen = !S.onlyOpen || d.open;
+    return matchQ && matchDist && matchCat && matchStock && matchOpen;
+  });
+  r.sort(function(a,b){
+    if (S.sort === "price") return a.price - b.price;
+    if (S.sort === "rate")  return b.rate - a.rate;
+    return a.dist - b.dist; // Default: Terdekat
+  });
+  return r;
+}
+
+// ============ RENDER ============
+function imgTag(d){
+  if (d.img) {
+    return '<img src="' + d.img + '" alt="' + d.name + '" class="h-full w-full object-contain rounded-xl p-1">';
+  }
+  return '<div class="h-full w-full flex items-center justify-center text-3xl">📦</div>';
+}
+
+function card(d){
+  var s = stk(d.stock), on = S.cmp.indexOf(d.id) > -1;
+  return '<article data-id="' + d.id + '" class="grid grid-cols-[80px_1fr] gap-3.5 rounded-xl border bg-white p-3.5 sm:grid-cols-[96px_1fr] cursor-default transition-all duration-200 ' +
+         (on ? 'border-[#E74C3C] ring-1 ring-[#E74C3C]' : 'border-[#2C3E50]/10') + '">' +
+    '<div aria-hidden="true" class="h-[80px] w-[80px] sm:h-[96px] sm:w-[96px] rounded-xl overflow-hidden border border-[#2C3E50]/8 bg-[#F5F5F5] flex-shrink-0">' + imgTag(d) + '</div>' +
+    '<div class="min-w-0">' +
+      '<div class="flex items-start justify-between gap-2">' +
+        '<h2 class="font-bold text-[#2C3E50] leading-snug text-base">' + d.name + '</h2>' +
+        '<span class="text-xs bg-[#2C3E50]/5 text-[#2C3E50]/70 px-2 py-0.5 rounded font-medium shrink-0">' + d.cat + '</span>' +
+      '</div>' +
+      '<div class="flex flex-wrap items-center gap-x-3 text-sm text-[#2C3E50]/60 mt-0.5">' +
+        '<span class="font-semibold text-[#2C3E50]">' + d.store + '</span>' +
+        (d.ver ? '<span class="font-semibold text-[#E74C3C]">✔ Terverifikasi</span>' : '') +
+        '<span>⭐ ' + d.rate.toFixed(1) + '</span>' +
+      '</div>' +
+      '<div class="text-sm text-[#2C3E50]/55 mt-0.5 flex items-center gap-2">' +
+        '<img src="lokasi.jpeg" alt="loc" class="w-3.5 h-3.5 object-contain opacity-70 inline">' +
+        '<span class="font-semibold text-[#2C3E50]">' + km(d.dist) + '</span> &nbsp;' +
+        (d.open ? '<span class="text-emerald-600 font-medium">● Buka</span>' : '<span class="text-red-500 font-medium">● Tutup</span>') +
+      '</div>' +
+      '<div class="mt-1.5 flex items-center gap-3">' +
+        '<span class="text-xl font-extrabold text-[#2C3E50]">' + rp(d.price) + '</span>' +
+        '<span class="rounded-md px-2 py-0.5 text-xs font-semibold ' + s[1] + '">' + s[0] + '</span>' +
+      '</div>' +
+      (d.rep ? '<p class="mt-1 text-xs text-amber-700">⚠️ ' + d.rep + ' laporan stok tidak akurat</p>' : '') +
+      '<div class="mt-2.5 flex flex-wrap gap-2">' +
+        '<button type="button" data-a="store" data-id="' + d.id + '" class="' + BTN + '">Lihat toko</button>' +
+        '<button type="button" data-a="cmp"   data-id="' + d.id + '" class="' + BTN + (on ? ' !border-[#E74C3C] !text-[#E74C3C]' : '') + '">' + (on ? '✓ Dibandingkan' : 'Bandingkan') + '</button>' +
+        '<button type="button" data-a="res"   data-id="' + d.id + '" class="' + BTN_PRI + '"' + (d.stock === 0 ? ' disabled' : '') + '>Reservasi</button>' +
+      '</div>' +
+    '</div></article>';
+}
+
+function render(){
+  var r = result();
+  var subInfo = [];
+  if (S.q) subInfo.push('"' + S.q + '"');
+  if (S.radius) subInfo.push('radius ≤ ' + km(S.radius));
+  else subInfo.push('semua jarak');
+  if (S.cat) subInfo.push(S.cat);
+
+  $("count").textContent = r.length
+    ? "Menampilkan " + r.length + " produk (" + subInfo.join(" • ") + ")"
+    : "Tidak ada produk (" + subInfo.join(" • ") + ")";
+
+  $("list").innerHTML = r.length ? r.map(card).join("") :
+    '<div class="rounded-xl border-2 border-dashed border-[#2C3E50]/15 bg-white p-8 text-center">' +
+    '<div class="text-4xl mb-2">🔍</div>' +
+    '<h2 class="mb-1 text-lg font-bold text-[#2C3E50]">Tidak ada barang dalam filter ini</h2>' +
+    '<p class="mb-3 text-[#2C3E50]/50">Perbesar radius atau hapus filter kata kunci.</p>' +
+    '<button type="button" id="widen" class="' + BTN_PRI + '">Tampilkan Semua Produk & Jarak</button></div>';
+
+  drawMap(r);
+  var n = S.cmp.length;
+  $("cmpbar").classList.toggle("translate-y-full", n === 0);
+  $("cmpn").textContent = "Bandingkan (" + n + "/3)";
+  $("cmpgo").disabled = n < 2;
+}
+
+function drawMap(r){
+  var cx = 180, cy = 170, R = 140, h = "";
+  var maxDataDist = Math.max.apply(null, DATA.map(function(d){ return d.dist; })) || 3000;
+  var effRadius = S.radius ? S.radius : (Math.max.apply(null, r.map(function(d){ return d.dist; })) || maxDataDist);
+  if (effRadius < 500) effRadius = 500;
+
+  [1, .5].forEach(function(f){
+    h += '<circle cx="'+cx+'" cy="'+cy+'" r="'+(R*f)+'" fill="none" stroke="#2C3E50" stroke-opacity="0.15" stroke-dasharray="4 4"/>';
+  });
+  h += '<text x="'+(cx+R*.5+4)+'" y="'+(cy-4)+'" font-size="10" fill="#2C3E50" opacity="0.5">'+km(Math.round(effRadius/2))+'</text>' +
+       '<text x="'+(cx+R-34)+'"  y="'+(cy-4)+'" font-size="10" fill="#2C3E50" opacity="0.5">'+km(effRadius)+'</text>';
+
+  r.forEach(function(d){
+    var rad = d.a*Math.PI/180;
+    var rr = Math.min((d.dist/effRadius)*R, R);
+    var x = cx + rr*Math.cos(rad), y = cy + rr*Math.sin(rad);
+    var c = d.stock === 0 ? "#E74C3C" : d.stock <= 5 ? "#f59e0b" : "#2C3E50";
+    h += '<g class="cursor-pointer" onclick="highlightItem('+d.id+')">' +
+         '<circle cx="'+x.toFixed(1)+'" cy="'+y.toFixed(1)+'" r="10" fill="'+c+'" stroke="#fff" stroke-width="1.5" />' +
+         '<text x="'+x.toFixed(1)+'" y="'+(y+3.5).toFixed(1)+'" text-anchor="middle" font-size="9" font-weight="700" fill="#fff">'+d.id+'</text>' +
+         '<title>'+d.name+' - '+d.store+' ('+km(d.dist)+')</title></g>';
+  });
+
+  h += '<circle cx="'+cx+'" cy="'+cy+'" r="8" fill="#E74C3C" stroke="#fff" stroke-width="2.5"/>' +
+       '<text x="'+cx+'" y="'+(cy+22)+'" text-anchor="middle" font-size="11" fill="#2C3E50" font-weight="600">Kamu</text>';
+  $("map").innerHTML = h;
+}
+
+function highlightItem(id){
+  var el = document.querySelector('article[data-id="'+id+'"]');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('ring-4', 'ring-[#E74C3C]');
+    setTimeout(function(){ el.classList.remove('ring-4', 'ring-[#E74C3C]'); }, 1500);
+  }
+}
+
+function compare(){
+  var items = S.cmp.map(function(id){ return DATA.filter(function(d){ return d.id === id; })[0]; });
+  var minP = Math.min.apply(null, items.map(function(d){return d.price;}));
+  var minD = Math.min.apply(null, items.map(function(d){return d.dist;}));
+  var maxR = Math.max.apply(null, items.map(function(d){return d.rate;}));
+  var TD   = "border-b border-[#2C3E50]/10 px-3 py-2.5 text-sm ";
+  var BEST = "bg-[#fdecea] font-bold ";
+  var row  = function(label, f){
+    return '<tr><th scope="row" class="' + TD + 'w-24 text-left font-normal text-[#2C3E50]/50">' + label + '</th>' + items.map(f).join("") + '</tr>';
+  };
+  $("ctable").innerHTML = '<table class="w-full min-w-[480px] border-collapse"><tr><th></th>' +
+    items.map(function(d){
+      return '<th scope="col" class="' + TD + 'text-left font-bold text-[#2C3E50]">' +
+        (d.img ? '<img src="'+d.img+'" alt="'+d.name+'" class="w-10 h-10 object-contain mb-1 rounded">' : '') +
+        d.store + '</th>';
+    }).join("") + '</tr>' +
+    row("Harga",  function(d){ return '<td class="'+TD+(d.price===minP?BEST:'')+'">'+rp(d.price)+(d.price===minP?' 🏷️ termurah':'')+' </td>'; }) +
+    row("Jarak",  function(d){ return '<td class="'+TD+(d.dist===minD?BEST:'')+'">'+km(d.dist)+(d.dist===minD?' · terdekat':'')+' </td>'; }) +
+    row("Stok",   function(d){ var s=stk(d.stock); return '<td class="'+TD+'"><span class="rounded-md px-2 py-0.5 text-xs font-semibold '+s[1]+'">'+s[0]+'</span></td>'; }) +
+    row("Rating", function(d){ return '<td class="'+TD+(d.rate===maxR?BEST:'')+'">⭐ '+d.rate.toFixed(1)+'</td>'; }) +
+    row("Aksi",   function(d){ return '<td class="'+TD+'"><button type="button" data-a="res" data-id="'+d.id+'" class="'+BTN_PRI+'"'+(d.stock===0?' disabled':'')+'>Reservasi</button></td>'; }) +
+    '</table>';
+  $("dlg").showModal();
+}
+
+// ============ EVENT ============
+var CHIP = "rounded-full border-2 border-[#2C3E50]/15 bg-white px-3 py-1 text-sm font-medium text-[#2C3E50] hover:border-[#E74C3C] hover:text-[#E74C3C] transition-colors cursor-pointer";
+var RADIUS_OPTIONS = [
+  { val: 0,    label: "Semua" },
+  { val: 500,  label: "500 m" },
+  { val: 1000, label: "1 km" },
+  { val: 3000, label: "3 km" },
+  { val: 5000, label: "5 km" }
+];
+
+function buildChips(){
+  $("radius").innerHTML = RADIUS_OPTIONS.map(function(opt){
+    var active = opt.val === S.radius;
+    return '<button type="button" data-r="'+opt.val+'" class="'+CHIP+(active?' chip-active':'')+'" aria-pressed="'+active+'">'+opt.label+'</button>';
+  }).join("");
+}
+buildChips();
+
+function setRadius(v){
+  // Jika klik tombol jarak yang sudah aktif (kecuali Semua), batalkan pilihan (kembali ke Semua = 0)
+  if (S.radius === v && v !== 0) {
+    S.radius = 0;
+  } else {
+    S.radius = v;
+  }
+  buildChips();
+  render();
+}
+
+$("radius").onclick = function(e){
+  var b = e.target.closest("[data-r]");
+  if (b) setRadius(+b.dataset.r);
+};
+
+if ($("q")) {
+  $("q").oninput = function(e){ S.q = e.target.value; render(); };
+}
+if ($("cat")) {
+  $("cat").onchange = function(e){ S.cat = e.target.value; render(); };
+}
+if ($("sort")) {
+  $("sort").onchange = function(e){ S.sort = e.target.value; render(); };
+}
+if ($("onlyStock")) {
+  $("onlyStock").onchange = function(e){ S.onlyStock = e.target.checked; render(); };
+}
+if ($("onlyOpen")) {
+  $("onlyOpen").onchange = function(e){ S.onlyOpen = e.target.checked; render(); };
+}
+if ($("loc")) {
+  $("loc").onclick = function(){ toast("📍 Lokasi GPS aktif: Di dekat Warung Bu Ani (Radius diurutkan dari posisi Anda)"); };
+}
+
+var segEl = document.querySelector(".seg");
+if (segEl) {
+  segEl.onclick = function(e){
+    var b = e.target.closest("[data-v]"); if (!b) return;
+    document.body.dataset.view = b.dataset.v;
+    [].forEach.call(document.querySelectorAll("[data-v]"), function(x){ x.setAttribute("aria-pressed", x === b); });
+  };
+}
+
+$("list").onclick = function(e){
+  if (e.target.id === "widen") {
+    S.q = "";
+    if ($("q")) $("q").value = "";
+    S.cat = "";
+    if ($("cat")) $("cat").value = "";
+    setRadius(0);
+    return;
+  }
+  var b = e.target.closest("[data-a]"); if (!b) return;
+  var id = +b.dataset.id, d = DATA.filter(function(x){ return x.id === id; })[0];
+  if (b.dataset.a === "cmp") {
+    var i = S.cmp.indexOf(id);
+    if (i > -1) S.cmp.splice(i, 1);
+    else if (S.cmp.length < 3) S.cmp.push(id);
+    else toast("Maksimal 3 barang untuk dibandingkan");
+    render();
+  }
+  if (b.dataset.a === "store") toast("Buka halaman toko: /showcase/toko/" + id + " (" + d.store + ")");
+  if (b.dataset.a === "res")   toast("Buka halaman Reservasi: " + d.name + " (" + d.store + ")");
+};
+
+if ($("ctable")) {
+  $("ctable").onclick = function(e){
+    var b = e.target.closest("[data-a=res]");
+    if (b) {
+      var d = DATA.filter(function(x){ return x.id === +b.dataset.id; })[0];
+      toast("Buka halaman Reservasi: " + (d ? d.name : "produk"));
+    }
+  };
+}
+if ($("cmpgo"))  $("cmpgo").onclick  = compare;
+if ($("cmpclr")) $("cmpclr").onclick = function(){ S.cmp = []; render(); };
+if ($("dclose")) $("dclose").onclick = function(){ $("dlg").close(); };
+
+render();
+</script>
+</body>
+</html>

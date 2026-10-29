@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WarLok — Fitur 4: Autentikasi & Verifikasi Toko</title>
+  <!-- Framework CDN Tailwind CSS v4 -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-[#F5F5F5] text-[#2C3E50] font-sans p-6">
+
+  <!-- KONTEN FITUR (Tanpa Sidebar & Header agar tidak dobel saat dipanggil di index.html) -->
+  <main class="max-w-7xl mx-auto">
+<!-- ================================================================= -->
+      <!-- FITUR 4: AUTENTIKASI, PROFIL & VERIFIKASI TOKO                    -->
+      <!-- (PIC: William Peter Vanx Najoan)                                  -->
+      <!-- ================================================================= -->
+      <section id="halaman-autentikasi" class="space-y-6 ">
+
+        <div class="bg-white p-6 rounded-xl border border-gray-200">
+          <h2 class="text-2xl font-bold text-[#2C3E50] mt-2">Autentikasi Multi-Peran, Profil & Verifikasi Toko</h2>
+          <p class="text-sm text-gray-500">Registrasi multi-peran (Konsumen, Merchant, Admin), pengelolaan profil & alamat koordinat, pengajuan toko, serta verifikasi oleh Admin.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
+
+          <!-- Form Registrasi Multi-Peran & Pengajuan Toko -->
+          <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-3">
+            <h3 class="text-base font-bold text-[#2C3E50]">Form Registrasi Multi-Peran & Pengajuan Toko</h3>
+            <form onsubmit="event.preventDefault(); tampilPesan('Data profil & pengajuan toko berhasil dikirim untuk diverifikasi Admin!');" class="space-y-3">
+              <div>
+                <label class="block font-bold mb-1">Pilih Peran Pengguna (User Role)</label>
+                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg font-bold">
+                  <option>1. Konsumen (Mahasiswa / Pembeli Sekitar Kos)</option>
+                  <option selected>2. Pemilik Toko / Pedagang (Merchant)</option>
+                  <option>3. Administrator Sistem</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block font-bold mb-1">Nama Pengguna / Pemilik</label>
+                  <input type="text" value="Siti Aminah" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+                </div>
+                <div>
+                  <label class="block font-bold mb-1">Nama Toko Fisik</label>
+                  <input type="text" value="Warung Bu Siti" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+                </div>
+              </div>
+              <div>
+                <label class="block font-bold mb-1">Alamat Lengkap & Koordinat Lokasi (Geolokasi)</label>
+                <input type="text" value="Jl. Telekomunikasi No. 14 (-6.9740, 107.6308)" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+              </div>
+              <div>
+                <label class="block font-bold mb-1">Nomor Berkas Legalitas (KTP / NIB / Surat Usaha)</label>
+                <input type="text" value="NIB-32041100482" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-[#2C3E50] hover:bg-slate-700 text-white font-bold rounded-lg cursor-pointer">
+                Simpan Profil & Ajukan Verifikasi Toko
+              </button>
+            </form>
+          </div>
+
+          <!-- Panel Admin: Verifikasi & Persetujuan Aktivasi Toko -->
+          <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-3">
+            <h3 class="text-base font-bold text-[#2C3E50]">Panel Admin: Verifikasi & Persetujuan Toko Baru</h3>
+            <p class="text-gray-500">Daftar pengajuan toko fisik baru yang menunggu verifikasi berkas dan titik lokasi oleh Administrator.</p>
+
+            <div class="p-4 bg-[#F5F5F5] rounded-lg space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-sm text-[#2C3E50]">Toko Sembako Berkah Jaya</span>
+                <span class="bg-yellow-100 text-yellow-800 font-bold px-2 py-0.5 rounded">Menunggu Verifikasi</span>
+              </div>
+              <p class="text-gray-600">Pemilik: <b>Pak Hendra</b> • Berkas: NIB-32041199201</p>
+              <p class="text-gray-500">📍 Koordinat: -6.9739, 107.6321 (Radius 190m dari Kampus)</p>
+              <div class="flex gap-2 pt-1">
+                <button type="button" onclick="tampilPesan('Toko Sembako Berkah Jaya telah Disetujui & Diaktifkan!')" class="px-3 py-1.5 bg-green-600 text-white font-bold rounded cursor-pointer">✔ Setujui & Aktifkan</button>
+                <button type="button" onclick="tampilPesan('Pengajuan toko ditolak, meminta revisi berkas.')" class="px-3 py-1.5 bg-[#E74C3C] text-white font-bold rounded cursor-pointer">✖ Tolak Pengajuan</button>
+              </div>
+            </div>
+
+            <div class="p-4 bg-[#F5F5F5] rounded-lg space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="font-bold text-sm text-[#2C3E50]">Warung Bu Siti</span>
+                <span class="bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded">✔ Terverifikasi Aktif</span>
+              </div>
+              <p class="text-gray-600">Pemilik: <b>Siti Aminah</b> • Berkas: NIB-32041100482</p>
+              <p class="text-gray-500">📍 Koordinat: -6.9740, 107.6308 (Radius 85m dari Kampus)</p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+  </main>
+
+  <!-- Notifikasi Popup Sederhana -->
+  <div id="kotakPesan" class="fixed bottom-5 right-5 bg-[#2C3E50] text-white px-4 py-3 rounded-xl shadow-lg text-xs font-semibold hidden">
+    Info: Aksi berhasil dijalankan!
+  </div>
+
+  <!-- SCRIPT SEDERHANA UNTUK FITUR -->
+  <script>
+    // 1. Pindah ke file fitur lain di dalam iframe
+    function bukaHalaman(namaFitur) {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ tipe: 'PINDAH_MENU', fitur: namaFitur }, '*');
+      }
+      window.location.href = namaFitur + '.html';
+    }
+
+    // 2. Fungsi Quick-Toggle status barang (khusus halaman Inventaris)
+    function ubahToggle(tombol) {
+      if (tombol.textContent.includes('Aktif')) {
+        tombol.textContent = 'Nonaktif (Habis)';
+        tombol.className = 'px-3 py-1 bg-gray-400 text-white font-bold rounded-full cursor-pointer';
+      } else {
+        tombol.textContent = 'Aktif (Tersedia)';
+        tombol.className = 'px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer';
+      }
+    }
+
+    // 3. Tampilkan pesan popup sederhana
+    function tampilPesan(teks) {
+      const kotak = document.getElementById('kotakPesan');
+      kotak.textContent = teks;
+      kotak.classList.remove('hidden');
+      setTimeout(function() {
+        kotak.classList.add('hidden');
+      }, 2500);
+    }
+
+
+  </script>
+</body>
+</html>

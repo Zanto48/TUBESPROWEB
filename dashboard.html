@@ -1,0 +1,391 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>WarLok - Dasbor Pemilik Warung Barokah</title>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #F5F5F5;
+      color: #2C3E50;
+      -webkit-font-smoothing: antialiased;
+    }
+    .card-bubble {
+      background: #FFFFFF;
+      border-radius: 28px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 20px -2px rgba(44, 62, 80, 0.05);
+    }
+    .detached-panel {
+      background: #FFFFFF;
+      border-radius: 36px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 20px -2px rgba(44, 62, 80, 0.05);
+    }
+    .bar-stripes {
+      background: repeating-linear-gradient(
+        45deg,
+        #F1F5F9,
+        #F1F5F9 6px,
+        #E2E8F0 6px,
+        #E2E8F0 12px
+      );
+    }
+    .pulse-glow {
+      box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+      animation: pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+    @keyframes pulse-ring {
+      to {
+        box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-6 lg:p-7 flex flex-col justify-between bg-[#F5F5F5]">
+<div class="max-w-[1600px] w-full mx-auto flex flex-col gap-6">
+<!-- 1. DETACHED LEFT SIDEBAR -->
+<!-- MAIN WORKSPACE -->
+<main class="flex-1 w-full flex flex-col gap-5">
+<!-- 2. TOP NAVIGATION BAR (Detached & Floating) -->
+
+<!-- 3. BENTO GRID 3-COLUMN LAYOUT -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+<!-- ================= CARD 1: STATUS WARLOK & TARGET (COL-SPAN-4) ================= -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-bold tracking-wider text-slate-400 uppercase">Target Penjualan Bulan Ini</span>
+<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#FDEAEA] text-[#E74C3C]">Aktif</span>
+</div>
+<!-- DIGITAL MERCHANT CARD: DEEP ELEGANT NAVY BLUE -->
+<div class="rounded-3xl p-6 bg-gradient-to-br from-[#2C3E50] via-[#243342] to-[#1A252F] text-white shadow-lg shadow-[#2C3E50]/25 relative overflow-hidden">
+<!-- Watermark pattern -->
+<div class="absolute -right-8 -bottom-8 w-40 h-40 rounded-full bg-white/5 pointer-events-none"></div>
+<div class="absolute -right-2 -top-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-[10px] font-semibold text-slate-300 uppercase tracking-widest">Digital Merchant Card</p>
+<p class="text-base font-extrabold tracking-tight">WarLok Digital</p>
+</div>
+<!-- Chip & Contactless Icon -->
+<div class="flex items-center gap-1.5 opacity-90">
+<div class="w-8 h-6 rounded-md bg-amber-300/85 border border-amber-200/50 flex items-center justify-center">
+<div class="w-4 h-3 border border-amber-900/40 rounded-sm"></div>
+</div>
+<svg class="w-5 h-5 text-white/80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M8.5 16.5a5 5 0 0 1 0-9"></path>
+<path d="M12 19a9 9 0 0 0 0-14"></path>
+</svg>
+</div>
+</div>
+<div class="mb-4">
+<p class="text-xs text-slate-300 font-medium mb-1">Capaian Omzet Digital</p>
+<div class="text-2xl font-extrabold tracking-tight">Rp 12.850.000</div>
+<div class="text-xs text-slate-300/90 font-medium mt-0.5">Target: Rp 20.000.000 (64.25%)</div>
+</div>
+<!-- Progress bar -->
+<div class="w-full bg-black/25 h-2 rounded-full overflow-hidden mb-4 p-0.5">
+<div class="bg-[#E74C3C] h-full rounded-full" style="width: 64.25%"></div>
+</div>
+<div class="flex justify-between items-center text-[11px] font-semibold tracking-wider text-slate-300 pt-2 border-t border-white/10">
+<span class="">AKTIF • WARUNG BAROKAH</span>
+<span class="">ID: WLK-8821</span>
+</div>
+</div>
+</div>
+<!-- Pendapatan Hari Ini Stacked Below -->
+<div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold text-slate-500">Pendapatan Hari Ini</p>
+<p class="text-xl font-extrabold text-[#2C3E50] tracking-tight mt-0.5">+Rp 450.000</p>
+</div>
+<div class="flex items-center gap-1 bg-[#FDEAEA] text-[#E74C3C] px-3 py-1.5 rounded-full text-xs font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="18 15 12 9 6 15"></polyline>
+</svg>
+<span class="">+12.8%</span>
+</div>
+</div>
+</section>
+<!-- ================= CARD 2: TREN KUNJUNGAN & PENCARIAN (COL-SPAN-4) ================= -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-extrabold text-[#2C3E50] text-base">Tren Kunjungan Mahasiswa</h3>
+<p class="text-xs text-slate-400 font-medium">Berdasarkan pencarian stok terdekat</p>
+</div>
+<!-- Toggle Bulanan / Tahunan -->
+<div class="bg-slate-100 p-1 rounded-full flex text-xs font-bold">
+<button class="px-3 py-1 rounded-full bg-[#E74C3C] text-white shadow-sm transition">Bulanan</button>
+<button class="px-3 py-1 rounded-full text-slate-500 hover:text-[#2C3E50] transition">Tahunan</button>
+</div>
+</div>
+<!-- Metric summary -->
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-3xl font-extrabold text-[#2C3E50] tracking-tight">1.428</span>
+<span class="text-xs font-semibold text-slate-400">Pengunjung / Minggu</span>
+</div>
+<!-- BARS VISUALIZATION (Rounded, Stripe Pattern, Solid Coral Red Peak) -->
+<div class="h-48 flex items-end justify-between gap-2.5 pt-4 px-1">
+<!-- SEN -->
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 55%;" title="Senin: 180 pengunjung"></div>
+<span class="text-[10px] font-bold text-slate-400">SEN</span>
+</div>
+<!-- SEL -->
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 40%;" title="Selasa: 140 pengunjung"></div>
+<span class="text-[10px] font-bold text-slate-400">SEL</span>
+</div>
+<!-- RAB -->
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 70%;" title="Rabu: 230 pengunjung"></div>
+<span class="text-[10px] font-bold text-slate-400">RAB</span>
+</div>
+<!-- KAM (PEAK WITH HIGHLIGHT) -->
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end relative">
+<!-- Peak Indicator Tooltip -->
+<div class="absolute -top-7 px-1.5 py-0.5 rounded-full bg-[#E74C3C] text-white text-[9px] font-extrabold whitespace-nowrap shadow-sm">
+                  +17.8%
+                </div>
+<div class="w-full bg-[#E74C3C] rounded-full shadow-md shadow-[#E74C3C]/25 transition-all hover:scale-105" style="height: 92%;" title="Kamis: 340 pengunjung (Paling Ramai)"></div>
+<span class="text-[10px] font-extrabold text-[#E74C3C]">KAM</span>
+</div>
+<!-- JUM -->
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 80%;" title="Jumat: 290 pengunjung"></div>
+<span class="text-[10px] font-bold text-slate-400">JUM</span>
+</div>
+<!-- SAB -->
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 60%;" title="Sabtu: 210 pengunjung"></div>
+<span class="text-[10px] font-bold text-slate-400">SAB</span>
+</div>
+<!-- MIN -->
+<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 35%;" title="Minggu: 110 pengunjung"></div>
+<span class="text-[10px] font-bold text-slate-400">MIN</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs text-slate-500 font-medium">
+<span class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#E74C3C]"></span> Hari terpadat: Kamis (Pra-Kuliah Umum)
+            </span>
+<span class="text-slate-400">Update 5 mnt lalu</span>
+</div>
+</section>
+<!-- ================= CARD 3: RESERVASI MENUNGGU PICK-UP (COL-SPAN-4) ================= -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-extrabold text-[#2C3E50] text-base">Antrean Reservasi Aktif</h3>
+<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-[#FDEAEA] text-[#E74C3C] border border-[#E74C3C]/20 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#E74C3C]"></span>
+                Siap Diambil
+              </span>
+</div>
+<p class="text-xs text-slate-400 font-medium mb-4">Antrean lock-stock aktif, menunggu pick-up</p>
+<!-- Big Gauge Number Style -->
+<div class="bg-slate-50 border border-slate-200/70 rounded-3xl p-5 mb-4">
+<div class="flex items-baseline justify-between">
+<div>
+<span class="text-4xl font-extrabold tracking-tight text-[#2C3E50]">45</span>
+<span class="text-base font-bold text-[#E74C3C] ml-1">Pesanan</span>
+</div>
+<span class="text-xs font-bold text-slate-600 bg-white px-2.5 py-1 rounded-full border border-slate-200">
+                  Est. Rp 680.000
+                </span>
+</div>
+<!-- Sparkline SVG Chart with Coral Red Stroke -->
+<div class="mt-4">
+<svg class="w-full h-12" fill="none" viewBox="0 0 200 40">
+<path d="M0 30 Q 30 10, 60 25 T 120 15 T 160 8 T 200 18" stroke="#E74C3C" stroke-linecap="round" stroke-width="2.5"></path>
+<path d="M0 30 Q 30 10, 60 25 T 120 15 T 160 8 T 200 18 L 200 40 L 0 40 Z" fill="url(#sparkline-grad-coral)" opacity="0.15"></path>
+<circle cx="160" cy="8" fill="#E74C3C" r="4" stroke="#FFFFFF" stroke-width="2"></circle>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="sparkline-grad-coral" x1="0" x2="0" y1="0" y2="40">
+<stop stop-color="#E74C3C"></stop>
+<stop offset="1" stop-color="#E74C3C" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+</div>
+</div>
+<!-- Quick list info -->
+<div class="text-xs text-slate-600 flex items-center justify-between mb-4 px-1">
+<span class="">Rata-rata waktu tunggu: <strong class="text-[#2C3E50]">12 menit</strong></span>
+<span class="text-[#2C3E50] font-semibold">Tepat Waktu 96%</span>
+</div>
+</div>
+<!-- Bottom Action Buttons Pills -->
+<div class="grid grid-cols-2 gap-3 pt-2">
+<button class="w-full py-3 rounded-full bg-[#E74C3C] text-white font-bold text-xs hover:bg-[#D63031] transition flex items-center justify-center gap-1.5 shadow-sm">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+              Proses Ambil
+            </button>
+<button class="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2C3E50] font-bold text-xs transition">
+              Batalkan
+            </button>
+</div>
+</section>
+<!-- ================= CARD 4: HISTORI VALIDASI KOMUNITAS (COL-SPAN-7) ================= -->
+<section class="card-bubble p-6 lg:col-span-7 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-5">
+<div>
+<h3 class="font-extrabold text-[#2C3E50] text-base">Aktivitas Terbaru &amp; Validasi Komunitas</h3>
+<p class="text-xs text-slate-400 font-medium">Laporan realtime mahasiswa sekitar kosan &amp; kampus</p>
+</div>
+<button class="text-xs font-bold text-[#E74C3C] hover:underline flex items-center gap-1">
+                Lihat Semua
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+<!-- Table Rows with Modern Hairline and Bubbly Details -->
+<div class="space-y-3">
+<!-- Row 1: Indomie Goreng -->
+<div class="p-3.5 rounded-2xl bg-slate-50/70 hover:bg-slate-100/70 transition flex items-center justify-between border border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-slate-200 text-[#2C3E50] font-bold flex items-center justify-center text-sm">
+                    🍜
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Indomie Goreng Reguler</h4>
+<p class="text-xs text-slate-500 font-medium">Sembako • 10:30 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#2C3E50]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2C3E50]"></span>
+                    Sesuai
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#2C3E50] w-24 text-right">
+                    x5 Bungkus
+                  </span>
+</div>
+</div>
+<!-- Row 2: Gas Elpiji 3kg (Alert Dilaporkan Kosong) -->
+<div class="p-3.5 rounded-2xl bg-[#FDEAEA]/60 hover:bg-[#FDEAEA]/80 transition flex items-center justify-between border border-[#E74C3C]/20">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-[#FDEAEA] text-[#E74C3C] font-bold flex items-center justify-center text-sm">
+                    🔥
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Gas Elpiji 3kg Melon</h4>
+<p class="text-xs text-slate-500 font-medium">Kebutuhan • 11:45 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#FDEAEA] text-[#E74C3C]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#E74C3C]"></span>
+                    Dilaporkan Kosong
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#E74C3C] w-24 text-right">
+                    x1 Tabung
+                  </span>
+</div>
+</div>
+<!-- Row 3: Le Minerale -->
+<div class="p-3.5 rounded-2xl bg-slate-50/70 hover:bg-slate-100/70 transition flex items-center justify-between border border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-slate-200 text-[#2C3E50] font-bold flex items-center justify-center text-sm">
+                    💧
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Air Mineral Le Minerale 1.5L</h4>
+<p class="text-xs text-slate-500 font-medium">Minuman • 10:15 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#2C3E50]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2C3E50]"></span>
+                    Sesuai
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#2C3E50] w-24 text-right">
+                    x12 Botol
+                  </span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">Diverifikasi oleh 28 mahasiswa aktif UNPAD &amp; ITB Jatinangor</span>
+<span class="font-semibold text-[#2C3E50]">Skor Akurasi Warung: 98%</span>
+</div>
+</section>
+<!-- ================= CARD 5: KEBUTUHAN STOK URGENT (COL-SPAN-5) ================= -->
+<section class="card-bubble p-6 lg:col-span-5 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<span class="text-xs font-bold tracking-wider text-slate-400 uppercase">Peringatan Kebutuhan</span>
+<h3 class="font-extrabold text-[#2C3E50] text-base mt-0.5">Total Item Hampir Habis</h3>
+</div>
+<span class="w-8 h-8 rounded-full bg-[#FDEAEA] text-[#E74C3C] flex items-center justify-center font-bold text-xs">
+                ⚠️
+              </span>
+</div>
+<!-- Big Alert 4 Barang -->
+<div class="flex items-baseline justify-between mb-5">
+<div>
+<span class="text-4xl font-extrabold tracking-tight text-[#E74C3C]">4</span>
+<span class="text-lg font-bold text-[#2C3E50] ml-1.5">Barang Urgent</span>
+</div>
+<span class="text-xs font-semibold text-slate-400">Segera belanja ke grosir</span>
+</div>
+<!-- Paling Urgent Section with Avatars and Pill count -->
+<div class="bg-[#FDEAEA]/50 border border-[#E74C3C]/20 rounded-3xl p-4 mb-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-bold text-[#E74C3C] uppercase tracking-wider">Permintaan Mahasiswa</span>
+<!-- Avatar Stack +2 -->
+<div class="flex items-center -space-x-2">
+<div class="w-6 h-6 rounded-full bg-slate-300 text-[10px] font-bold text-slate-700 flex items-center justify-center border-2 border-white" title="Rian (Teknik)">R</div>
+<div class="w-6 h-6 rounded-full bg-rose-200 text-[10px] font-bold text-[#E74C3C] flex items-center justify-center border-2 border-white" title="Siti (Farmasi)">S</div>
+<div class="w-6 h-6 rounded-full bg-amber-200 text-[10px] font-bold text-amber-900 flex items-center justify-center border-2 border-white" title="Bayu (Fikom)">B</div>
+<div class="w-6 h-6 rounded-full bg-[#2C3E50] text-[9px] font-bold text-white flex items-center justify-center border-2 border-white">+2</div>
+</div>
+</div>
+<!-- List of low stocks -->
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs py-1.5 border-b border-[#E74C3C]/15">
+<span class="font-bold text-[#2C3E50]">Tolak Angin Cair (Pack)</span>
+<span class="font-extrabold text-[#E74C3C] bg-[#FDEAEA] px-2 py-0.5 rounded-full">Sisa 2 Sachet</span>
+</div>
+<div class="flex items-center justify-between text-xs py-1.5 border-b border-[#E74C3C]/15">
+<span class="font-bold text-[#2C3E50]">Telur Ayam Negeri</span>
+<span class="font-extrabold text-[#E74C3C] bg-[#FDEAEA] px-2 py-0.5 rounded-full">Sisa 0.5 Kg</span>
+</div>
+<div class="flex items-center justify-between text-xs py-1.5">
+<span class="font-bold text-[#2C3E50]">Beras Ramos Setra 5kg</span>
+<span class="font-extrabold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">Sisa 1 Karung</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action to restock -->
+<button class="w-full py-3 rounded-full bg-[#2C3E50] text-white font-bold text-xs hover:bg-[#1A252F] transition flex items-center justify-center gap-2">
+<svg class="w-4 h-4 text-[#E74C3C]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<circle cx="9" cy="21" r="1"></circle>
+<circle cx="20" cy="21" r="1"></circle>
+<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+</svg>
+            Buat Catatan Kulakan Grosir
+          </button>
+</section>
+</div>
+</main>
+</div>
+
+
+</body></html>
