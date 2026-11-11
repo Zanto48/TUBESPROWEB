@@ -35,8 +35,8 @@
                   <p class="text-gray-500">Tertulis: Tersedia (28 sachet)</p>
                 </div>
                 <div class="flex gap-2">
-                  <button type="button" onclick="tampilPesan('Terima kasih! Voting Stok Sesuai berhasil dikirim.')" class="px-3 py-1.5 bg-green-600 text-white font-bold rounded cursor-pointer"> Sesuai (42)</button>
-                  <button type="button" onclick="tampilPesan('Laporan Stok Kosong telah dicatat.')" class="px-3 py-1.5 bg-[#E74C3C] text-white font-bold rounded cursor-pointer"> Kosong (0)</button>
+                  <button type="button" data-count="42" onclick="voteStok(this, 'sesuai', 'item1')" class="btn-vote-item1 px-3 py-1.5 bg-green-600 text-white font-bold rounded cursor-pointer">✔ Sesuai (42)</button>
+                  <button type="button" data-count="0" onclick="voteStok(this, 'kosong', 'item1')" class="btn-vote-item1 px-3 py-1.5 bg-[#E74C3C] text-white font-bold rounded cursor-pointer">✖ Kosong (0)</button>
                 </div>
               </div>
 
@@ -46,8 +46,8 @@
                   <p class="text-gray-500">Tertulis: Tersedia (2 tabung)</p>
                 </div>
                 <div class="flex gap-2">
-                  <button type="button" onclick="tampilPesan('Terima kasih! Voting Stok Sesuai berhasil dikirim.')" class="px-3 py-1.5 bg-green-600 text-white font-bold rounded cursor-pointer"> Sesuai (5)</button>
-                  <button type="button" onclick="tampilPesan('Laporan Stok Kosong telah dicatat.')" class="px-3 py-1.5 bg-[#E74C3C] text-white font-bold rounded cursor-pointer"> Kosong (8)</button>
+                  <button type="button" data-count="5" onclick="voteStok(this, 'sesuai', 'item2')" class="btn-vote-item2 px-3 py-1.5 bg-green-600 text-white font-bold rounded cursor-pointer">✔ Sesuai (5)</button>
+                  <button type="button" data-count="8" onclick="voteStok(this, 'kosong', 'item2')" class="btn-vote-item2 px-3 py-1.5 bg-[#E74C3C] text-white font-bold rounded cursor-pointer">✖ Kosong (8)</button>
                 </div>
               </div>
             </div>
@@ -55,55 +55,61 @@
             <!-- Daftar Ulasan Komunitas -->
             <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-3 text-xs">
               <h3 class="text-base font-bold text-[#2C3E50]">Ulasan & Rating Pelayanan Toko</h3>
-              <div class="p-3 bg-[#F5F5F5] rounded-lg">
-                <div class="flex justify-between font-bold">
-                  <span>Dimas Pratama (Mahasiswa) — Warung Ciganitri</span>
-                  <span class="text-yellow-600">★★★★★ (5.0)</span>
+              <div id="wadahUlasanKomunitas" class="space-y-3">
+                <div class="p-3 bg-[#F5F5F5] rounded-lg">
+                  <div class="flex justify-between font-bold">
+                    <span>Dimas Pratama (Mahasiswa) — Warung Ciganitri</span>
+                    <span class="text-yellow-600">★★★★★ (5.0)</span>
+                  </div>
+                  <p class="text-gray-600 mt-1">"Stok Indomie dan telur sangat akurat sesuai aplikasi. Ibu pemilik warung ramah dan cepat menyiapkan barang."</p>
                 </div>
-                <p class="text-gray-600 mt-1">"Stok Indomie dan telur sangat akurat sesuai aplikasi. Ibu pemilik warung ramah dan cepat menyiapkan barang."</p>
-              </div>
-              <div class="p-3 bg-[#F5F5F5] rounded-lg">
-                <div class="flex justify-between font-bold">
-                  <span>Fajar Nugroho — Kelontong Pak RT</span>
-                  <span class="text-yellow-600">★★☆☆☆ (2.0)</span>
+                <div class="p-3 bg-[#F5F5F5] rounded-lg">
+                  <div class="flex justify-between font-bold">
+                    <span>Fajar Nugroho — Kelontong Pak RT</span>
+                    <span class="text-yellow-600">★★☆☆☆ (2.0)</span>
+                  </div>
+                  <p class="text-gray-600 mt-1">"Di web tertulis gas 3kg masih ada, tapi waktu saya datangi ternyata sudah habis."</p>
                 </div>
-                <p class="text-gray-600 mt-1">"Di web tertulis gas 3kg masih ada, tapi waktu saya datangi ternyata sudah habis."</p>
               </div>
             </div>
           </div>
 
           <!-- Kolom Kanan: Form Kirim Ulasan & Lapor Stok Tidak Akurat -->
-          <div class="bg-white p-6 rounded-xl border border-gray-200">
+          <div id="panelFormUlasan" class="bg-white p-6 rounded-xl border border-gray-200 h-fit">
             <h3 class="text-base font-bold text-[#2C3E50] mb-4">Form Ulasan & Pelaporan Stok Tidak Akurat</h3>
-            <form onsubmit="event.preventDefault(); tampilPesan('Ulasan dan laporan akurasi stok berhasil dikirim!');" class="space-y-3 text-xs">
+            <form id="formUlasan" onsubmit="kirimUlasanBaru(event)" class="space-y-3 text-xs">
+              <div>
+                <label class="block font-bold mb-1">Nama Pengulas (Mahasiswa)</label>
+                <input id="ulasanNama" type="text" value="Rakha Abdillah (Mahasiswa)" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+              </div>
               <div>
                 <label class="block font-bold mb-1">Pilih Nama Toko / Warung</label>
-                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
-                  <option>Warung Bu Siti (Radius 85m)</option>
-                  <option>Warung Madura 24 Jam (Radius 140m)</option>
-                  <option>Kelontong Pak RT (Radius 340m)</option>
+                <select id="ulasanToko" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                  <option value="Warung Bu Siti">Warung Bu Siti (Radius 85m)</option>
+                  <option value="Warung Madura 24 Jam">Warung Madura 24 Jam (Radius 140m)</option>
+                  <option value="Kelontong Pak RT">Kelontong Pak RT (Radius 340m)</option>
                 </select>
               </div>
               <div>
                 <label class="block font-bold mb-1">Status Akurasi Stok Saat Didatangi</label>
-                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
-                  <option>✔ Stok & Harga Akurat Sesuai Aplikasi</option>
-                  <option> Laporan: Tertulis Tersedia tapi Barang Habis (Stok Fiktif)</option>
-                  <option> Laporan: Harga di Kasir Berbeda dengan Aplikasi</option>
+                <select id="ulasanAkurasi" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                  <option value="✔ Stok & Harga Akurat">✔ Stok & Harga Akurat Sesuai Aplikasi</option>
+                  <option value="⚠️ Laporan Stok Fiktif / Habis">⚠️ Laporan: Tertulis Tersedia tapi Barang Habis (Stok Fiktif)</option>
+                  <option value="⚠️ Laporan Harga Berbeda">⚠️ Laporan: Harga di Kasir Berbeda dengan Aplikasi</option>
                 </select>
               </div>
               <div>
                 <label class="block font-bold mb-1">Rating Pelayanan Toko</label>
-                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
-                  <option>★★★★★ (5 - Sangat Memuaskan)</option>
-                  <option>★★★★☆ (4 - Baik)</option>
-                  <option>★★★☆☆ (3 - Cukup)</option>
-                  <option>★★☆☆☆ (2 - Kurang Akurat)</option>
+                <select id="ulasanRating" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                  <option value="★★★★★ (5.0)">★★★★★ (5 - Sangat Memuaskan)</option>
+                  <option value="★★★★☆ (4.0)">★★★★☆ (4 - Baik)</option>
+                  <option value="★★★☆☆ (3.0)">★★★☆☆ (3 - Cukup)</option>
+                  <option value="★★☆☆☆ (2.0)">★★☆☆☆ (2 - Kurang Akurat)</option>
                 </select>
               </div>
               <div>
                 <label class="block font-bold mb-1">Tulis Ulasan / Keterangan Laporan</label>
-                <textarea rows="3" placeholder="Tuliskan ulasan pelayanan warung atau detail laporan stok..." required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg"></textarea>
+                <textarea id="ulasanTeks" rows="3" placeholder="Tuliskan ulasan pelayanan warung atau detail laporan stok..." required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg"></textarea>
               </div>
               <button type="submit" class="w-full py-2.5 bg-[#E74C3C] hover:bg-red-700 text-white font-bold rounded-lg cursor-pointer">
                 Kirim Ulasan / Laporan Stok
@@ -151,6 +157,83 @@
         kotak.classList.add('hidden');
       }, 2500);
     }
+
+    // 4. Algoritma Voting Stok & Kirim Ulasan (Hanya Konsumen yang bisa vote & kirim ulasan)
+    let peranUlasan = 'konsumen';
+    const sudahVote = {};
+
+    function voteStok(tombol, tipe, itemId) {
+      if (peranUlasan === 'merchant') {
+        tampilPesan('Pemilik warung hanya dapat memantau hasil voting konsumen.');
+        return;
+      }
+      if (sudahVote[itemId]) {
+        tampilPesan('Anda sudah memberikan voting untuk barang ini.');
+        return;
+      }
+      sudahVote[itemId] = true;
+      const angkaLama = parseInt(tombol.getAttribute('data-count') || '0', 10);
+      const angkaBaru = angkaLama + 1;
+      tombol.setAttribute('data-count', angkaBaru);
+
+      if (tipe === 'sesuai') {
+        tombol.textContent = '✔ Sesuai (' + angkaBaru + ')';
+        tampilPesan('Terima kasih! Voting Stok Sesuai berhasil ditambahkan.');
+      } else {
+        tombol.textContent = '✖ Kosong (' + angkaBaru + ')';
+        tampilPesan('Laporan Stok Kosong berhasil dicatat.');
+      }
+    }
+
+    function kirimUlasanBaru(event) {
+      event.preventDefault();
+      if (peranUlasan === 'merchant') {
+        tampilPesan('Pemilik warung tidak dapat mengirim ulasan konsumen.');
+        return;
+      }
+      const nama = document.getElementById('ulasanNama').value.trim();
+      const toko = document.getElementById('ulasanToko').value;
+      const akurasi = document.getElementById('ulasanAkurasi').value;
+      const rating = document.getElementById('ulasanRating').value;
+      const teks = document.getElementById('ulasanTeks').value.trim();
+
+      const wadah = document.getElementById('wadahUlasanKomunitas');
+      const divBaru = document.createElement('div');
+      divBaru.className = 'p-3 bg-[#F5F5F5] rounded-lg border border-gray-200';
+      divBaru.innerHTML =
+        '<div class="flex justify-between font-bold">' +
+          '<span>' + nama + ' — ' + toko + '</span>' +
+          '<span class="text-yellow-600">' + rating + '</span>' +
+        '</div>' +
+        '<p class="text-[11px] font-semibold text-[#E74C3C] mt-0.5">' + akurasi + '</p>' +
+        '<p class="text-gray-600 mt-1">"' + teks + '"</p>';
+
+      wadah.insertBefore(divBaru, wadah.firstChild);
+      document.getElementById('ulasanTeks').value = '';
+      tampilPesan('Ulasan untuk ' + toko + ' berhasil ditambahkan!');
+    }
+
+    function aturPeranUlasan(role) {
+      peranUlasan = role;
+      const panelForm = document.getElementById('panelFormUlasan');
+      if (!panelForm) return;
+      if (role === 'merchant') {
+        panelForm.classList.add('opacity-60');
+      } else {
+        panelForm.classList.remove('opacity-60');
+      }
+    }
+
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.tipe === 'GANTI_ROLE') {
+        aturPeranUlasan(event.data.role);
+      }
+    });
+
+    try {
+      const savedRole = localStorage.getItem('warlok_role');
+      if (savedRole) aturPeranUlasan(savedRole);
+    } catch (e) {}
 
 
   </script>

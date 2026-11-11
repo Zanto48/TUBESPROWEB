@@ -349,6 +349,21 @@ if (segEl) {
   };
 }
 
+function lanjutKeReservasi(d) {
+  if (!d) return;
+  if (d.stock === 0) {
+    toast("Stok barang ini sedang habis.");
+    return;
+  }
+  try {
+    localStorage.setItem('warlok_draft_reservasi', JSON.stringify(d));
+  } catch (err) {}
+  if (window.parent && window.parent !== window) {
+    window.parent.postMessage({ tipe: 'PINDAH_MENU', fitur: 'reservasi' }, '*');
+  }
+  window.location.href = 'reservasi.html';
+}
+
 $("list").onclick = function(e){
   if (e.target.id === "widen") {
     S.q = "";
@@ -367,8 +382,15 @@ $("list").onclick = function(e){
     else toast("Maksimal 3 barang untuk dibandingkan");
     render();
   }
-  if (b.dataset.a === "store") toast("Buka halaman toko: /showcase/toko/" + id + " (" + d.store + ")");
-  if (b.dataset.a === "res")   toast("Buka halaman Reservasi: " + d.name + " (" + d.store + ")");
+  if (b.dataset.a === "store") {
+    S.q = d.store;
+    if ($("q")) $("q").value = d.store;
+    render();
+    toast("Menampilkan seluruh barang dari " + d.store);
+  }
+  if (b.dataset.a === "res") {
+    lanjutKeReservasi(d);
+  }
 };
 
 if ($("ctable")) {
@@ -376,7 +398,7 @@ if ($("ctable")) {
     var b = e.target.closest("[data-a=res]");
     if (b) {
       var d = DATA.filter(function(x){ return x.id === +b.dataset.id; })[0];
-      toast("Buka halaman Reservasi: " + (d ? d.name : "produk"));
+      lanjutKeReservasi(d);
     }
   };
 }

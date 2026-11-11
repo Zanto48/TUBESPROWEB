@@ -14,119 +14,295 @@
 <!-- ================================================================= -->
       <!-- FITUR 5: RESERVASI BARANG / HOLD STOK (PIC: Rakha Abdillah A.)    -->
       <!-- ================================================================= -->
-      <section id="halaman-reservasi" class="space-y-6 ">
+      <section id="halaman-reservasi" class="space-y-6">
 
+        <!-- Header & Mode Peran -->
         <div class="bg-white p-6 rounded-xl border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 class="text-2xl font-bold text-[#2C3E50] mt-2">Reservasi Barang (Hold Stok Ambil di Tempat)</h2>
-            <p class="text-sm text-gray-500">Konsumen dapat mengunci (hold) kuota stok barang sementara sebelum pengambilan fisik dan pembayaran langsung di lokasi.</p>
+            <div class="flex items-center gap-2">
+              <span id="badgePeranAktif" class="bg-[#fdecea] text-[#E74C3C] text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Mode Konsumen</span>
+              <span class="text-xs text-gray-400">• Alur Reservasi & Pembayaran</span>
+            </div>
+            <h2 class="text-2xl font-bold text-[#2C3E50] mt-1">Reservasi, Pembayaran & Ambil Barang di Tempat</h2>
+            <p id="subjudulHalaman" class="text-sm text-gray-500">Konsumen melakukan reservasi (hold) stok barang terlebih dahulu, menyelesaikan pembayaran, lalu mendapatkan bukti siap ambil di lokasi warung.</p>
           </div>
-          <div class="bg-[#2C3E50] text-white px-4 py-2.5 rounded-lg text-xs font-bold">
-            ⏱️ Batas Waktu Hold Aktif: <span class="text-[#E74C3C] bg-white px-2 py-0.5 rounded ml-1">30 Menit</span>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 shrink-0">
+            <!-- Tombol simulasi ganti sudut pandang jika dibuka langsung tanpa index.html -->
+            <div class="bg-[#F5F5F5] p-1 rounded-lg border border-gray-200 flex text-[11px] font-bold">
+              <button type="button" id="btnModeKonsumen" onclick="aturPeranReservasi('konsumen')" class="px-3 py-1.5 rounded-md bg-[#E74C3C] text-white cursor-pointer">Sudut Pandang Konsumen</button>
+              <button type="button" id="btnModeMerchant" onclick="aturPeranReservasi('merchant')" class="px-3 py-1.5 rounded-md text-[#2C3E50] hover:bg-gray-200 cursor-pointer">Sudut Pandang Warung</button>
+            </div>
+            <div class="bg-[#2C3E50] text-white px-4 py-2 rounded-lg text-xs font-bold">
+              ⏱️ Hold Stok: <span class="text-[#E74C3C] bg-white px-2 py-0.5 rounded ml-1">Maks. 30 Menit</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indikator Alur 3 Tahap Khusus Konsumen: 1. Reservasi -> 2. Bayar -> 3. Siap Ambil -->
+        <div id="alurKonsumenBar" class="bg-white p-4 rounded-xl border border-gray-200 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div id="step-1" class="flex items-center gap-3 p-3 rounded-lg bg-[#2C3E50] text-white transition-all shadow-sm">
+            <span class="w-7 h-7 rounded-full bg-[#E74C3C] text-white font-bold flex items-center justify-center shrink-0">1</span>
+            <div>
+              <p class="font-bold">Tahap 1: Reservasi Barang</p>
+              <p class="text-[11px] opacity-80">Pilih barang & kunci (hold) stok di warung</p>
+            </div>
+          </div>
+          <div id="step-2" class="flex items-center gap-3 p-3 rounded-lg bg-[#F5F5F5] text-[#2C3E50] border border-gray-200 transition-all">
+            <span class="w-7 h-7 rounded-full bg-[#2C3E50] text-white font-bold flex items-center justify-center shrink-0">2</span>
+            <div>
+              <p class="font-bold">Tahap 2: Pembayaran Pesanan</p>
+              <p class="text-[11px] opacity-75">Bayar pesanan setelah reservasi berhasil dibuat</p>
+            </div>
+          </div>
+          <div id="step-3" class="flex items-center gap-3 p-3 rounded-lg bg-[#F5F5F5] text-[#2C3E50] border border-gray-200 transition-all">
+            <span class="w-7 h-7 rounded-full bg-green-600 text-white font-bold flex items-center justify-center shrink-0">3</span>
+            <div>
+              <p class="font-bold">Tahap 3: Telah Dibayar & Siap Diambil</p>
+              <p class="text-[11px] opacity-75">Muncul bukti lunas untuk ambil barang di tempat</p>
+            </div>
           </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs">
 
-          <!-- Form Booking / Hold Barang Sementara -->
-          <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-3">
-            <h3 class="text-base font-bold text-[#2C3E50]">Form Hold Barang Sementara</h3>
-            <form onsubmit="event.preventDefault(); tampilPesan('Stok berhasil dikunci sementara! Silakan ambil barang di warung dalam 30 menit.');" class="space-y-3">
-              <div>
-                <label class="block font-bold mb-1">Nama Konsumen (Mahasiswa)</label>
-                <input type="text" value="Rakha Abdillah (Kos Sukapura)" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+          <!-- KOLOM KIRI: Form Reservasi (Hanya untuk Konsumen) / Ringkasan Kasir (Untuk Merchant) -->
+          <div class="space-y-4">
+
+            <!-- Panel Form Reservasi (Khusus Konsumen) -->
+            <div id="panelFormKonsumen" class="bg-white p-6 rounded-xl border border-gray-200 space-y-3 h-fit">
+              <div class="flex items-center justify-between">
+                <h3 class="text-base font-bold text-[#2C3E50]">1. Form Reservasi Barang</h3>
+                <span class="text-[10px] font-bold bg-slate-100 text-[#2C3E50] px-2 py-0.5 rounded">Khusus Konsumen</span>
               </div>
-              <div>
-                <label class="block font-bold mb-1">Pilih Toko Tujuan</label>
-                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
-                  <option>Warung Bu Siti (Radius 85m)</option>
-                  <option>Warung Madura 24 Jam (Radius 140m)</option>
-                </select>
-              </div>
-              <div>
-                <label class="block font-bold mb-1">Pilih Barang yang Di-Hold</label>
-                <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
-                  <option>Indomie Goreng Reguler (Rp 3.100)</option>
-                  <option>Telur Ayam Ras 1kg (Rp 27.500)</option>
-                  <option>Beras Setra Ramos 5kg (Rp 69.500)</option>
-                </select>
-              </div>
-              <div class="grid grid-cols-2 gap-3">
+              <p class="text-gray-500">Langkah pertama: kunci kuota stok barang di warung terlebih dahulu sebelum melanjutkan ke pembayaran.</p>
+
+              <form id="formReservasi" onsubmit="buatReservasiBaru(event)" class="space-y-3">
                 <div>
-                  <label class="block font-bold mb-1">Jumlah Barang</label>
-                  <input type="number" value="2" min="1" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+                  <label class="block font-bold mb-1">Nama Konsumen (Mahasiswa)</label>
+                  <input id="inputNama" type="text" value="Rakha Abdillah (Kos Sukapura)" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
                 </div>
                 <div>
-                  <label class="block font-bold mb-1">Durasi Hold</label>
-                  <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
-                    <option>15 Menit</option>
-                    <option selected>30 Menit</option>
+                  <label class="block font-bold mb-1">Pilih Toko Tujuan</label>
+                  <select id="inputToko" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                    <option value="Warung Bu Siti (Radius 85m)">Warung Bu Siti (Radius 85m)</option>
+                    <option value="Warung Madura 24 Jam (Radius 140m)">Warung Madura 24 Jam (Radius 140m)</option>
+                    <option value="Warung Bu Ani (Radius 250m)">Warung Bu Ani (Radius 250m)</option>
+                    <option value="Toko Maju (Radius 700m)">Toko Maju (Radius 700m)</option>
                   </select>
                 </div>
+                <div>
+                  <label class="block font-bold mb-1">Pilih Barang yang Di-Hold</label>
+                  <select id="inputBarang" onchange="hitungEstimasi()" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                    <option value="Indomie Goreng Reguler" data-harga="3100" data-satuan="bungkus" data-stok="15">Indomie Goreng Reguler (Rp 3.100 • Stok: 15)</option>
+                    <option value="Telur Ayam Ras 1kg" data-harga="27500" data-satuan="kg" data-stok="8">Telur Ayam Ras 1kg (Rp 27.500 • Stok: 8)</option>
+                    <option value="Beras Setra Ramos 5kg" data-harga="69500" data-satuan="karung" data-stok="5">Beras Setra Ramos 5kg (Rp 69.500 • Stok: 5)</option>
+                    <option value="Air Mineral 600ml" data-harga="3000" data-satuan="botol" data-stok="24">Air Mineral 600ml (Rp 3.000 • Stok: 24)</option>
+                  </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block font-bold mb-1">Jumlah Barang</label>
+                    <input id="inputJumlah" type="number" value="2" min="1" max="15" oninput="hitungEstimasi()" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+                  </div>
+                  <div>
+                    <label class="block font-bold mb-1">Durasi Hold</label>
+                    <select id="inputDurasi" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+                      <option value="15 Menit">15 Menit</option>
+                      <option value="30 Menit" selected>30 Menit</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="p-3 bg-[#F5F5F5] rounded-lg border border-gray-200 space-y-1">
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-600 font-semibold">Estimasi Total Tagihan:</span>
+                    <span id="labelEstimasiTotal" class="text-sm font-extrabold text-[#E74C3C]">Rp 6.200</span>
+                  </div>
+                  <p class="text-[10px] text-gray-400">*Pembayaran dilakukan pada langkah berikutnya setelah stok berhasil direservasi.</p>
+                </div>
+                <button type="submit" class="w-full py-2.5 bg-[#E74C3C] hover:bg-red-700 text-white font-bold rounded-lg cursor-pointer">
+                  🔒 1. Reservasi Barang Sekarang
+                </button>
+              </form>
+            </div>
+
+            <!-- Panel Info Merchant (Hanya muncul saat Mode Warung/Merchant) -->
+            <div id="panelInfoMerchant" class="bg-white p-6 rounded-xl border border-gray-200 space-y-3 hidden">
+              <span class="bg-[#2C3E50] text-white text-[10px] font-bold px-2.5 py-1 rounded uppercase">Mode Kasir Warung</span>
+              <h3 class="text-base font-bold text-[#2C3E50] mt-1">Verifikasi Pengambilan Barang</h3>
+              <p class="text-gray-500 leading-relaxed">
+                Pada mode pemilik warung, Anda tidak membuat reservasi melainkan memproses pesanan konsumen yang masuk:
+              </p>
+              <ul class="space-y-2 text-gray-600 list-disc pl-4">
+                <li>Pesanan berstatus <b>Menunggu Pembayaran</b> sedang diselesaikan pembayarannya oleh konsumen.</li>
+                <li>Pesanan berstatus <b>Telah Dibayar (Siap Diambil)</b> sudah lunas dan konsumen akan datang menunjukkan <b>Kode Ambil (PICK-XXXX)</b>.</li>
+                <li>Klik tombol <b>"Serahkan Barang (Selesai)"</b> saat konsumen mengambil barang di warung.</li>
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- KOLOM KANAN: Tampilan Bukti Lunas & Siap Diambil + Daftar Reservasi -->
+          <div class="lg:col-span-2 space-y-6">
+
+            <!-- TAMPILAN BARANG TELAH DIBAYAR & SIAP DIAMBIL DI TEMPAT (MUNCUL SETELAH PEMBAYARAN BERHASIL) -->
+            <div id="panelSiapAmbil" class="bg-white p-6 rounded-xl border-2 border-green-500 shadow-md space-y-4 hidden">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-4">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-bold text-lg shrink-0">✔</div>
+                  <div>
+                    <span class="bg-green-100 text-green-800 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wide">
+                      Pembayaran Berhasil • Lunas
+                    </span>
+                    <h3 class="text-base font-extrabold text-[#2C3E50] mt-1">
+                      Barang yang Direservasi Telah Dibayar & Siap Diambil ke Tempat!
+                    </h3>
+                    <p class="text-gray-500 text-[11px]">Silakan datang langsung ke warung tujuan dan tunjukkan bukti pengambilan ini kepada penjaga toko.</p>
+                  </div>
+                </div>
+                <div class="bg-[#2C3E50] text-white px-4 py-2.5 rounded-xl text-center shrink-0">
+                  <p class="text-[10px] text-gray-300 uppercase">Kode Ambil Langsung</p>
+                  <p id="passKodeAmbil" class="text-base font-mono font-extrabold tracking-wider text-amber-300">PICK-8821</p>
+                </div>
               </div>
-              <button type="submit" class="w-full py-2.5 bg-[#E74C3C] hover:bg-red-700 text-white font-bold rounded-lg cursor-pointer">
-                🔒 Kunci (Hold) Stok Sekarang
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-[#F5F5F5] p-4 rounded-xl border border-gray-200">
+                <div>
+                  <p class="text-gray-400 text-[11px]">Barang yang Direservasi</p>
+                  <p id="passBarang" class="font-bold text-[#2C3E50] text-sm mt-0.5">-</p>
+                  <p id="passKodeReservasi" class="text-[11px] text-gray-500 mt-0.5">No. Reservasi: <b>-</b></p>
+                </div>
+                <div>
+                  <p class="text-gray-400 text-[11px]">Lokasi Ambil Secara Langsung</p>
+                  <p id="passToko" class="font-bold text-[#2C3E50] mt-0.5">-</p>
+                  <p id="passPemesan" class="text-[11px] text-gray-500 mt-0.5">Pemesan: -</p>
+                </div>
+                <div>
+                  <p class="text-gray-400 text-[11px]">Rincian Pembayaran</p>
+                  <p id="passTotal" class="font-extrabold text-green-700 text-sm mt-0.5">-</p>
+                  <p id="passMetode" class="text-[11px] text-gray-500 mt-0.5">-</p>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                <div class="flex items-center gap-2 text-green-800 bg-green-50 border border-green-200 px-3 py-2 rounded-lg w-full">
+                  <span class="text-base">🏪</span>
+                  <p id="passInstruksi" class="text-[11px]">
+                    <b>Status: Siap Diambil di Tempat.</b> Barang Anda sudah dikunci penuh dan disiapkan oleh pemilik warung.
+                  </p>
+                </div>
+                <button type="button" onclick="sembunyikanBuktiAmbil()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-[#2C3E50] font-bold rounded-lg cursor-pointer shrink-0">
+                  Tutup Bukti
+                </button>
+              </div>
+            </div>
+
+            <!-- Daftar Reservasi Aktif -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200 space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
+                <div>
+                  <h3 id="judulDaftarReservasi" class="text-base font-bold text-[#2C3E50]">Daftar Reservasi Saya (Konsumen)</h3>
+                  <p id="deskripsiDaftarReservasi" class="text-gray-500">Setelah mereservasi barang, klik tombol <b>"Bayar Sekarang"</b> agar barang siap diambil di tempat.</p>
+                </div>
+                <span id="badgeJumlahReservasi" class="bg-[#F5F5F5] border border-gray-200 text-[#2C3E50] font-bold px-3 py-1 rounded-full text-[11px] w-fit">
+                  0 Pesanan
+                </span>
+              </div>
+
+              <div id="daftarReservasi" class="space-y-3"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- MODAL PEMBAYARAN RESERVASI (TAHAP 2 KONSUMEN) -->
+        <div id="modalPembayaran" class="fixed inset-0 bg-black/50 z-40 hidden items-center justify-center p-4">
+          <div class="bg-white rounded-2xl max-w-md w-full p-6 border border-gray-200 shadow-2xl space-y-4 text-xs">
+            <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+              <div>
+                <span class="bg-[#fdecea] text-[#E74C3C] font-bold px-2 py-0.5 rounded text-[10px] uppercase">Tahap 2: Pembayaran Konsumen</span>
+                <h3 class="text-base font-bold text-[#2C3E50] mt-1">Selesaikan Pembayaran Reservasi</h3>
+              </div>
+              <button type="button" onclick="tutupModalBayar()" class="text-gray-400 hover:text-gray-700 font-bold text-base cursor-pointer px-2">✕</button>
+            </div>
+
+            <!-- Ringkasan Pesanan yang Akan Dibayar -->
+            <div class="p-3.5 bg-[#F5F5F5] rounded-xl space-y-1.5 border border-gray-200">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Kode Reservasi:</span>
+                <span id="bayarKode" class="font-mono font-bold text-[#2C3E50]">-</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Nama Pemesan:</span>
+                <span id="bayarPemesan" class="font-semibold text-[#2C3E50]">-</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Barang yang Direservasi:</span>
+                <span id="bayarBarang" class="font-bold text-[#2C3E50]">-</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Lokasi Pengambilan:</span>
+                <span id="bayarToko" class="font-semibold text-[#2C3E50]">-</span>
+              </div>
+              <div class="flex justify-between border-t border-gray-200 pt-2 mt-1">
+                <span class="font-bold text-[#2C3E50]">Total Harus Dibayar:</span>
+                <span id="bayarTotal" class="text-sm font-extrabold text-[#E74C3C]">-</span>
+              </div>
+            </div>
+
+            <!-- Pilihan Metode Pembayaran -->
+            <div class="space-y-2">
+              <label class="block font-bold text-[#2C3E50]">Pilih Metode Pembayaran:</label>
+              <label class="flex items-center justify-between p-3 border rounded-xl cursor-pointer bg-[#F5F5F5] border-[#2C3E50]">
+                <span class="flex items-center gap-2 font-bold text-[#2C3E50]">
+                  <input type="radio" name="metodeBayar" value="QRIS WarLok (Instan)" checked class="accent-[#E74C3C]" />
+                  <span>📱 QRIS WarLok (GoPay, OVO, DANA, M-Banking)</span>
+                </span>
+                <span class="text-[10px] bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded">Instan</span>
+              </label>
+              <label class="flex items-center justify-between p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-[#F5F5F5]">
+                <span class="flex items-center gap-2 font-semibold text-[#2C3E50]">
+                  <input type="radio" name="metodeBayar" value="E-Wallet (Saldo DANA / GoPay)" class="accent-[#E74C3C]" />
+                  <span>💳 E-Wallet (Saldo DANA / GoPay)</span>
+                </span>
+              </label>
+              <label class="flex items-center justify-between p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-[#F5F5F5]">
+                <span class="flex items-center gap-2 font-semibold text-[#2C3E50]">
+                  <input type="radio" name="metodeBayar" value="Transfer Virtual Account Bank" class="accent-[#E74C3C]" />
+                  <span>🏦 Transfer Virtual Account (BCA / Mandiri / BRI)</span>
+                </span>
+              </label>
+            </div>
+
+            <div class="p-3 bg-slate-50 border border-dashed border-gray-300 rounded-xl flex items-center gap-3">
+              <div class="w-12 h-12 bg-[#2C3E50] text-white rounded-lg flex items-center justify-center font-mono text-[10px] font-bold shrink-0 text-center leading-tight">
+                QRIS<br/>WARLOK
+              </div>
+              <p class="text-[11px] text-gray-600">
+                Setelah menekan tombol <b>Bayar Sekarang</b>, bukti pengambilan barang di tempat akan langsung diterbitkan.
+              </p>
+            </div>
+
+            <div class="flex gap-2 pt-1">
+              <button type="button" onclick="tutupModalBayar()" class="w-1/3 py-2.5 bg-gray-200 hover:bg-gray-300 text-[#2C3E50] font-bold rounded-lg cursor-pointer">
+                Nanti Saja
               </button>
-            </form>
-          </div>
-
-          <!-- Daftar Reservasi Aktif (Untuk Konsumen & Pemilik Toko) -->
-          <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-200 space-y-3">
-            <h3 class="text-base font-bold text-[#2C3E50]">Daftar Antrean Reservasi Pick-Up (Ambil di Tempat)</h3>
-            <p class="text-gray-500">Pemilik toko dapat menerima/menolak reservasi, dan konsumen membayar langsung saat mengambil barang di lokasi.</p>
-
-            <!-- Tiket Reservasi 1 -->
-            <div class="p-4 bg-[#F5F5F5] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                  <span class="bg-[#2C3E50] text-white font-mono font-bold px-2 py-0.5 rounded">WLK-8821</span>
-                  <span class="font-bold text-sm text-[#2C3E50]">Indomie Goreng Reguler (2 bungkus)</span>
-                  <span class="bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded">Siap Ambil</span>
-                </div>
-                <p class="text-gray-600">Pemesan: <b>Rakha Abdillah</b> • Toko: <b>Warung Bu Siti</b></p>
-                <p class="text-gray-500">Total Bayar di Lokasi: <b class="text-[#E74C3C]">Rp 6.200</b> (Tunai / QRIS di Warung)</p>
-              </div>
-              <div class="flex gap-2">
-                <button type="button" onclick="tampilPesan('Pesanan WLK-8821 selesai diambil dan dibayar di lokasi!')" class="px-3 py-2 bg-green-600 text-white font-bold rounded-lg cursor-pointer">
-                  ✔ Selesai Ambil
-                </button>
-              </div>
+              <button type="button" onclick="prosesPembayaran()" class="w-2/3 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg cursor-pointer">
+                ✅ Bayar Sekarang
+              </button>
             </div>
-
-            <!-- Tiket Reservasi 2 -->
-            <div class="p-4 bg-[#F5F5F5] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div class="space-y-1">
-                <div class="flex items-center gap-2">
-                  <span class="bg-[#2C3E50] text-white font-mono font-bold px-2 py-0.5 rounded">WLK-8822</span>
-                  <span class="font-bold text-sm text-[#2C3E50]">Telur Ayam Ras 1kg (1 kg)</span>
-                  <span class="bg-yellow-100 text-yellow-800 font-bold px-2 py-0.5 rounded">Menunggu Konfirmasi Toko</span>
-                </div>
-                <p class="text-gray-600">Pemesan: <b>Siti Rahma (Kos Melati)</b> • Toko: <b>Warung Bu Siti</b></p>
-                <p class="text-gray-500">Total Bayar di Lokasi: <b class="text-[#E74C3C]">Rp 27.500</b> (Bayar Tunai di Tempat)</p>
-              </div>
-              <div class="flex gap-2">
-                <button type="button" onclick="tampilPesan('Reservasi WLK-8822 diterima! Stok dikunci untuk pembeli.')" class="px-3 py-2 bg-[#2C3E50] text-white font-bold rounded-lg cursor-pointer">
-                  Terima
-                </button>
-                <button type="button" onclick="tampilPesan('Reservasi WLK-8822 ditolak.')" class="px-3 py-2 bg-[#E74C3C] text-white font-bold rounded-lg cursor-pointer">
-                  Tolak
-                </button>
-              </div>
-            </div>
-
           </div>
-
         </div>
 
       </section>
   </main>
 
   <!-- Notifikasi Popup Sederhana -->
-  <div id="kotakPesan" class="fixed bottom-5 right-5 bg-[#2C3E50] text-white px-4 py-3 rounded-xl shadow-lg text-xs font-semibold hidden">
+  <div id="kotakPesan" class="fixed bottom-5 right-5 bg-[#2C3E50] text-white px-4 py-3 rounded-xl shadow-lg text-xs font-semibold hidden z-50">
     Info: Aksi berhasil dijalankan!
   </div>
 
-  <!-- SCRIPT SEDERHANA UNTUK FITUR -->
+  <!-- SCRIPT ALGORITMA RESERVASI & PEMBAYARAN -->
   <script>
     // 1. Pindah ke file fitur lain di dalam iframe
     function bukaHalaman(namaFitur) {
@@ -152,12 +328,411 @@
       const kotak = document.getElementById('kotakPesan');
       kotak.textContent = teks;
       kotak.classList.remove('hidden');
-      setTimeout(function() {
+      clearTimeout(tampilPesan.timer);
+      tampilPesan.timer = setTimeout(function() {
         kotak.classList.add('hidden');
-      }, 2500);
+      }, 3000);
     }
 
+    // 4. State Peran Pengguna & Data Reservasi
+    // Konsumen hanya bisa: (1) Reservasi Barang -> (2) Membayar Barang -> (3) Melihat Bukti Telah Dibayar & Siap Diambil
+    // Merchant/Warung hanya bisa: Menyerahkan barang di kasir saat konsumen datang membawa Kode Ambil
+    let peranSaatIni = 'konsumen';
 
+    let dataReservasi = [
+      {
+        kode: 'WLK-8821',
+        kodeAmbil: 'PICK-8821',
+        nama: 'Rakha Abdillah (Kos Sukapura)',
+        toko: 'Warung Bu Siti (Radius 85m)',
+        barang: 'Indomie Goreng Reguler',
+        jumlah: 2,
+        satuan: 'bungkus',
+        total: 6200,
+        durasi: '30 Menit',
+        status: 'MENUNGGU_BAYAR', // MENUNGGU_BAYAR | SIAP_AMBIL | SELESAI_AMBIL
+        metodeBayar: '-',
+        waktuBayar: '-'
+      }
+    ];
+
+    let kodeSedangDibayar = null;
+
+    function formatRupiah(angka) {
+      return 'Rp ' + Number(angka).toLocaleString('id-ID');
+    }
+
+    // Mengatur indikator Tahap 1 -> Tahap 2 -> Tahap 3
+    function setStepAktif(stepAktif) {
+      [1, 2, 3].forEach(function(no) {
+        const el = document.getElementById('step-' + no);
+        if (!el) return;
+        if (no === stepAktif) {
+          el.className = 'flex items-center gap-3 p-3 rounded-lg bg-[#2C3E50] text-white transition-all shadow-sm';
+        } else if (no < stepAktif) {
+          el.className = 'flex items-center gap-3 p-3 rounded-lg bg-green-50 text-green-900 border border-green-300 transition-all';
+        } else {
+          el.className = 'flex items-center gap-3 p-3 rounded-lg bg-[#F5F5F5] text-[#2C3E50] border border-gray-200 transition-all';
+        }
+      });
+    }
+
+    // Mengatur hak akses tampilan antara Konsumen vs Pemilik Warung
+    function aturPeranReservasi(peran) {
+      peranSaatIni = (peran === 'merchant') ? 'merchant' : 'konsumen';
+
+      const badgePeran = document.getElementById('badgePeranAktif');
+      const btnKonsumen = document.getElementById('btnModeKonsumen');
+      const btnMerchant = document.getElementById('btnModeMerchant');
+      const panelFormKonsumen = document.getElementById('panelFormKonsumen');
+      const panelInfoMerchant = document.getElementById('panelInfoMerchant');
+      const alurKonsumenBar = document.getElementById('alurKonsumenBar');
+      const judulDaftar = document.getElementById('judulDaftarReservasi');
+      const deskripsiDaftar = document.getElementById('deskripsiDaftarReservasi');
+
+      if (peranSaatIni === 'konsumen') {
+        badgePeran.textContent = 'Mode Konsumen';
+        badgePeran.className = 'bg-[#fdecea] text-[#E74C3C] text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase';
+        btnKonsumen.className = 'px-3 py-1.5 rounded-md bg-[#E74C3C] text-white cursor-pointer';
+        btnMerchant.className = 'px-3 py-1.5 rounded-md text-[#2C3E50] hover:bg-gray-200 cursor-pointer';
+        panelFormKonsumen.classList.remove('hidden');
+        panelInfoMerchant.classList.add('hidden');
+        alurKonsumenBar.classList.remove('hidden');
+        judulDaftar.textContent = 'Daftar Reservasi Saya (Konsumen)';
+        deskripsiDaftar.innerHTML = 'Setelah mereservasi barang, klik tombol <b>"Bayar Sekarang"</b> agar barang siap diambil langsung di tempat.';
+      } else {
+        badgePeran.textContent = 'Mode Pemilik Warung';
+        badgePeran.className = 'bg-slate-200 text-[#2C3E50] text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase';
+        btnMerchant.className = 'px-3 py-1.5 rounded-md bg-[#2C3E50] text-white cursor-pointer';
+        btnKonsumen.className = 'px-3 py-1.5 rounded-md text-[#2C3E50] hover:bg-gray-200 cursor-pointer';
+        panelFormKonsumen.classList.add('hidden');
+        panelInfoMerchant.classList.remove('hidden');
+        alurKonsumenBar.classList.add('hidden');
+        judulDaftar.textContent = 'Antrean Pengambilan Reservasi Masuk (Kasir Warung)';
+        deskripsiDaftar.innerHTML = 'Pantau pembayaran konsumen dan konfirmasi penyerahan barang saat konsumen datang ke lokasi warung.';
+      }
+
+      renderDaftarReservasi();
+    }
+
+    // Kalkulasi otomatis total harga pada Form Reservasi
+    function hitungEstimasi() {
+      const selectBarang = document.getElementById('inputBarang');
+      const opt = selectBarang.options[selectBarang.selectedIndex];
+      const harga = parseInt(opt.getAttribute('data-harga') || '0', 10);
+      const stokMaks = parseInt(opt.getAttribute('data-stok') || '99', 10);
+      const inputJumlah = document.getElementById('inputJumlah');
+
+      let jumlah = parseInt(inputJumlah.value || '1', 10);
+      if (isNaN(jumlah) || jumlah < 1) jumlah = 1;
+      if (jumlah > stokMaks) {
+        jumlah = stokMaks;
+        inputJumlah.value = stokMaks;
+        tampilPesan('Jumlah disesuaikan dengan sisa stok tersedia (' + stokMaks + ').');
+      }
+
+      const total = harga * jumlah;
+      document.getElementById('labelEstimasiTotal').textContent = formatRupiah(total);
+    }
+
+    // TAHAP 1: Konsumen membuat reservasi barang (Stok dikunci sementara, status = MENUNGGU_BAYAR)
+    function buatReservasiBaru(event) {
+      event.preventDefault();
+      if (peranSaatIni !== 'konsumen') {
+        tampilPesan('Hanya Konsumen yang dapat membuat reservasi barang.');
+        return;
+      }
+
+      const nama = document.getElementById('inputNama').value.trim();
+      const toko = document.getElementById('inputToko').value;
+      const selectBarang = document.getElementById('inputBarang');
+      const opt = selectBarang.options[selectBarang.selectedIndex];
+      const barang = opt.value;
+      const harga = parseInt(opt.getAttribute('data-harga') || '0', 10);
+      const satuan = opt.getAttribute('data-satuan') || 'pcs';
+      const jumlah = Math.max(1, parseInt(document.getElementById('inputJumlah').value || '1', 10));
+      const durasi = document.getElementById('inputDurasi').value;
+
+      const nomorUrut = Math.floor(8822 + Math.random() * 900);
+      const kodeBaru = 'WLK-' + nomorUrut;
+      const itemBaru = {
+        kode: kodeBaru,
+        kodeAmbil: 'PICK-' + nomorUrut,
+        nama: nama,
+        toko: toko,
+        barang: barang,
+        jumlah: jumlah,
+        satuan: satuan,
+        total: harga * jumlah,
+        durasi: durasi,
+        status: 'MENUNGGU_BAYAR',
+        metodeBayar: '-',
+        waktuBayar: '-'
+      };
+
+      // Sembunyikan panel siap ambil sebelumnya agar alur berurutan dari Tahap 1 -> Tahap 2
+      document.getElementById('panelSiapAmbil').classList.add('hidden');
+
+      dataReservasi.unshift(itemBaru);
+      renderDaftarReservasi();
+      setStepAktif(2);
+      tampilPesan('Reservasi ' + kodeBaru + ' berhasil dibuat! Silakan lanjutkan pembayaran pesanan Anda.');
+
+      // Langsung buka modal pembayaran untuk memudahkan konsumen membayar setelah reservasi
+      bukaModalBayar(kodeBaru);
+    }
+
+    // TAHAP 2: Konsumen membuka modal pembayaran
+    function bukaModalBayar(kode) {
+      if (peranSaatIni !== 'konsumen') {
+        tampilPesan('Pembayaran hanya dilakukan oleh Konsumen.');
+        return;
+      }
+      const item = dataReservasi.find(function(r) { return r.kode === kode; });
+      if (!item || item.status !== 'MENUNGGU_BAYAR') return;
+
+      kodeSedangDibayar = kode;
+      document.getElementById('bayarKode').textContent = item.kode;
+      document.getElementById('bayarPemesan').textContent = item.nama;
+      document.getElementById('bayarBarang').textContent = item.barang + ' (' + item.jumlah + ' ' + item.satuan + ')';
+      document.getElementById('bayarToko').textContent = item.toko;
+      document.getElementById('bayarTotal').textContent = formatRupiah(item.total);
+
+      const modal = document.getElementById('modalPembayaran');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setStepAktif(2);
+    }
+
+    function tutupModalBayar() {
+      const modal = document.getElementById('modalPembayaran');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      kodeSedangDibayar = null;
+    }
+
+    // TAHAP 3: Konsumen menyelesaikan pembayaran -> Muncul tampilan bahwa barang telah dibayar & siap diambil di tempat
+    function prosesPembayaran() {
+      if (!kodeSedangDibayar) return;
+      const item = dataReservasi.find(function(r) { return r.kode === kodeSedangDibayar; });
+      if (!item) return;
+
+      const radioTerpilih = document.querySelector('input[name="metodeBayar"]:checked');
+      const metode = radioTerpilih ? radioTerpilih.value : 'QRIS WarLok (Instan)';
+      const sekarang = new Date();
+      const jamMenit = sekarang.getHours().toString().padStart(2, '0') + ':' + sekarang.getMinutes().toString().padStart(2, '0') + ' WIB';
+
+      item.status = 'SIAP_AMBIL';
+      item.metodeBayar = metode;
+      item.waktuBayar = jamMenit;
+
+      tutupModalBayar();
+      renderDaftarReservasi();
+      tampilkanBuktiAmbil(item.kode);
+      setStepAktif(3);
+      tampilPesan('Pembayaran ' + item.kode + ' LUNAS! Barang siap diambil secara langsung di ' + item.toko + '.');
+    }
+
+    // Menampilkan kartu Bukti Barang Telah Dibayar & Siap Diambil ke Tempat Secara Langsung
+    function tampilkanBuktiAmbil(kode) {
+      const item = dataReservasi.find(function(r) { return r.kode === kode; });
+      if (!item || (item.status !== 'SIAP_AMBIL' && item.status !== 'SELESAI_AMBIL')) return;
+
+      document.getElementById('passKodeAmbil').textContent = item.kodeAmbil;
+      document.getElementById('passBarang').textContent = item.barang + ' (' + item.jumlah + ' ' + item.satuan + ')';
+      document.getElementById('passKodeReservasi').innerHTML = 'No. Reservasi: <b>' + item.kode + '</b>';
+      document.getElementById('passToko').textContent = '📍 ' + item.toko;
+      document.getElementById('passPemesan').textContent = 'Pemesan: ' + item.nama;
+      document.getElementById('passTotal').textContent = formatRupiah(item.total) + ' (LUNAS)';
+      document.getElementById('passMetode').textContent = item.metodeBayar + ' • Pukul ' + item.waktuBayar;
+
+      const instruksi = document.getElementById('passInstruksi');
+      if (item.status === 'SELESAI_AMBIL') {
+        instruksi.innerHTML = '<b>Status: Sudah Diambil.</b> Barang ini telah diserahkan langsung kepada konsumen di warung.';
+      } else {
+        instruksi.innerHTML = '<b>Status: Siap Diambil Secara Langsung di Tempat.</b> Tunjukkan kode <b>' + item.kodeAmbil + '</b> kepada pemilik <b>' + item.toko + '</b> (Batas hold: ' + item.durasi + ').';
+      }
+
+      const panel = document.getElementById('panelSiapAmbil');
+      panel.classList.remove('hidden');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      setStepAktif(3);
+    }
+
+    function sembunyikanBuktiAmbil() {
+      document.getElementById('panelSiapAmbil').classList.add('hidden');
+    }
+
+    // Konsumen hanya bisa membatalkan reservasi jika belum dibayar
+    function batalkanReservasiKonsumen(kode) {
+      const item = dataReservasi.find(function(r) { return r.kode === kode; });
+      if (!item || item.status !== 'MENUNGGU_BAYAR') return;
+
+      dataReservasi = dataReservasi.filter(function(r) { return r.kode !== kode; });
+      renderDaftarReservasi();
+      setStepAktif(1);
+      tampilPesan('Reservasi ' + kode + ' telah dibatalkan dan kuota stok dikembalikan.');
+    }
+
+    // Khusus Pemilik Warung (Merchant): konfirmasi penyerahan barang saat konsumen datang ke lokasi
+    function verifikasiSerahkanBarang(kode) {
+      if (peranSaatIni !== 'merchant') return;
+      const item = dataReservasi.find(function(r) { return r.kode === kode; });
+      if (!item || item.status !== 'SIAP_AMBIL') return;
+
+      item.status = 'SELESAI_AMBIL';
+      renderDaftarReservasi();
+      tampilkanBuktiAmbil(kode);
+      tampilPesan('Barang ' + kode + ' telah diserahkan langsung kepada konsumen di warung!');
+    }
+
+    function renderDaftarReservasi() {
+      const wadah = document.getElementById('daftarReservasi');
+      const badgeJumlah = document.getElementById('badgeJumlahReservasi');
+      if (!wadah) return;
+
+      badgeJumlah.textContent = dataReservasi.length + ' Pesanan';
+
+      if (dataReservasi.length === 0) {
+        wadah.innerHTML =
+          '<div class="p-8 text-center bg-[#F5F5F5] rounded-xl border border-dashed border-gray-300 text-gray-500">' +
+            '<p class="font-bold text-[#2C3E50] text-sm">Belum Ada Reservasi Aktif</p>' +
+            '<p class="mt-1">Silakan isi Form Reservasi Barang di sebelah kiri untuk mengunci stok dan melakukan pembayaran.</p>' +
+          '</div>';
+        return;
+      }
+
+      wadah.innerHTML = dataReservasi.map(function(item) {
+        let badgeHtml = '';
+        let infoBayarHtml = '';
+        let aksiHtml = '';
+
+        if (item.status === 'MENUNGGU_BAYAR') {
+          badgeHtml = '<span class="bg-amber-100 text-amber-800 font-bold px-2.5 py-0.5 rounded-full">⏳ 1. Direservasi • Menunggu Pembayaran</span>';
+          infoBayarHtml = 'Tagihan Reservasi: <b class="text-[#E74C3C]">' + formatRupiah(item.total) + '</b> • Stok Di-Hold Selama <b>' + item.durasi + '</b>';
+
+          if (peranSaatIni === 'konsumen') {
+            aksiHtml =
+              '<button type="button" onclick="bukaModalBayar(\'' + item.kode + '\')" class="px-3.5 py-2 bg-[#E74C3C] hover:bg-red-700 text-white font-bold rounded-lg cursor-pointer shadow-sm">💳 2. Bayar Sekarang</button>' +
+              '<button type="button" onclick="batalkanReservasiKonsumen(\'' + item.kode + '\')" class="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-[#2C3E50] font-bold rounded-lg cursor-pointer">Batalkan</button>';
+          } else {
+            aksiHtml =
+              '<span class="px-3 py-1.5 bg-amber-50 border border-amber-200 text-amber-800 font-semibold rounded-lg">Menunggu Konsumen Membayar</span>';
+          }
+        } else if (item.status === 'SIAP_AMBIL') {
+          badgeHtml = '<span class="bg-green-100 text-green-700 font-bold px-2.5 py-0.5 rounded-full">✔ Telah Dibayar • Siap Diambil di Tempat</span>';
+          infoBayarHtml = 'Pembayaran: <b class="text-green-700">' + formatRupiah(item.total) + ' (LUNAS - ' + item.metodeBayar + ')</b> • Kode Ambil: <b class="font-mono bg-[#2C3E50] text-amber-300 px-1.5 py-0.5 rounded">' + item.kodeAmbil + '</b>';
+
+          if (peranSaatIni === 'konsumen') {
+            aksiHtml =
+              '<button type="button" onclick="tampilkanBuktiAmbil(\'' + item.kode + '\')" class="px-3.5 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg cursor-pointer shadow-sm">🎫 Lihat Bukti Siap Ambil</button>';
+          } else {
+            aksiHtml =
+              '<button type="button" onclick="verifikasiSerahkanBarang(\'' + item.kode + '\')" class="px-3.5 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg cursor-pointer">📦 Serahkan Barang (Selesai)</button>';
+          }
+        } else {
+          badgeHtml = '<span class="bg-gray-200 text-gray-700 font-bold px-2.5 py-0.5 rounded-full">✔ Selesai Diambil di Tempat</span>';
+          infoBayarHtml = 'Telah Dibayar & Diambil Langsung: <b class="text-gray-700">' + formatRupiah(item.total) + ' (' + item.metodeBayar + ')</b>';
+          aksiHtml =
+            '<button type="button" onclick="tampilkanBuktiAmbil(\'' + item.kode + '\')" class="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-[#2C3E50] font-bold rounded-lg cursor-pointer">Lihat Riwayat Bukti</button>';
+        }
+
+        return (
+          '<div class="p-4 bg-[#F5F5F5] rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 border ' + (item.status === 'SIAP_AMBIL' ? 'border-green-400 bg-green-50/30' : 'border-gray-200') + '">' +
+            '<div class="space-y-1">' +
+              '<div class="flex flex-wrap items-center gap-2">' +
+                '<span class="bg-[#2C3E50] text-white font-mono font-bold px-2 py-0.5 rounded">' + item.kode + '</span>' +
+                '<span class="font-bold text-sm text-[#2C3E50]">' + item.barang + ' (' + item.jumlah + ' ' + item.satuan + ')</span>' +
+                badgeHtml +
+              '</div>' +
+              '<p class="text-gray-600">Pemesan: <b>' + item.nama + '</b> • Lokasi Ambil: <b>' + item.toko + '</b></p>' +
+              '<p class="text-gray-500">' + infoBayarHtml + '</p>' +
+            '</div>' +
+            '<div class="flex flex-wrap gap-2 shrink-0">' +
+              aksiHtml +
+            '</div>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    // Cek jika ada produk yang dikirim dari halaman Showcase (showcase.html)
+    function muatDraftDariShowcase() {
+      try {
+        const draftRaw = localStorage.getItem('warlok_draft_reservasi');
+        if (!draftRaw) return;
+        localStorage.removeItem('warlok_draft_reservasi');
+        const draft = JSON.parse(draftRaw);
+
+        // Tambahkan/pilih toko di select
+        const selectToko = document.getElementById('inputToko');
+        const labelToko = draft.store + ' (Radius ' + draft.dist + 'm)';
+        let tokoAda = false;
+        for (let i = 0; i < selectToko.options.length; i++) {
+          if (selectToko.options[i].value.toLowerCase().includes(draft.store.toLowerCase())) {
+            selectToko.selectedIndex = i;
+            tokoAda = true;
+            break;
+          }
+        }
+        if (!tokoAda) {
+          const optToko = document.createElement('option');
+          optToko.value = labelToko;
+          optToko.textContent = labelToko;
+          selectToko.appendChild(optToko);
+          selectToko.value = labelToko;
+        }
+
+        // Tambahkan/pilih barang di select
+        const selectBarang = document.getElementById('inputBarang');
+        let barangAda = false;
+        for (let j = 0; j < selectBarang.options.length; j++) {
+          if (selectBarang.options[j].value.toLowerCase() === draft.name.toLowerCase()) {
+            selectBarang.selectedIndex = j;
+            barangAda = true;
+            break;
+          }
+        }
+        if (!barangAda) {
+          const optBrg = document.createElement('option');
+          optBrg.value = draft.name;
+          optBrg.setAttribute('data-harga', draft.price);
+          optBrg.setAttribute('data-satuan', 'pcs');
+          optBrg.setAttribute('data-stok', draft.stock || 10);
+          optBrg.textContent = draft.name + ' (Rp ' + Number(draft.price).toLocaleString('id-ID') + ' • Stok: ' + (draft.stock || 10) + ')';
+          selectBarang.appendChild(optBrg);
+          selectBarang.value = draft.name;
+        }
+
+        document.getElementById('inputJumlah').value = 1;
+        hitungEstimasi();
+        tampilPesan('Produk "' + draft.name + '" dari ' + draft.store + ' siap direservasi!');
+      } catch (e) {}
+    }
+
+    // Dengarkan perubahan role dari index.html
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.tipe === 'GANTI_ROLE') {
+        aturPeranReservasi(event.data.role);
+      }
+    });
+
+    // Inisialisasi saat halaman dibuka
+    (function initReservasi() {
+      try {
+        const savedRole = localStorage.getItem('warlok_role');
+        if (savedRole) {
+          aturPeranReservasi(savedRole);
+        } else {
+          aturPeranReservasi('konsumen');
+        }
+      } catch (e) {
+        aturPeranReservasi('konsumen');
+      }
+      muatDraftDariShowcase();
+      hitungEstimasi();
+      renderDaftarReservasi();
+    })();
   </script>
 </body>
 </html>
