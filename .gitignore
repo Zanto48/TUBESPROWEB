@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+/backend/vendor/
+composer.phar
+
+# Build outputs
+build/
+dist/
+coverage/
+/backend/public/build/
+/backend/public/hot
+/backend/public/storage
+
+# Environment files
+.env
+.env.*
+!.env.example
+/backend/.env
+/backend/.env.backup
+/backend/.env.production
+!/backend/.env.example
+
+# Laravel storage & cache
+/backend/storage/*.key
+/backend/storage/pail
+/backend/storage/logs/*.log
+/backend/storage/framework/cache/data/*
+!/backend/storage/framework/cache/data/.gitignore
+/backend/storage/framework/sessions/*
+!/backend/storage/framework/sessions/.gitignore
+/backend/storage/framework/views/*.php
+/backend/.phpunit.cache
+/backend/.phpunit.result.cache
+
+# Logs & OS / Editor files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.fleet/
+.nova/
+.zed/

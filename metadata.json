@@ -1,0 +1,6 @@
+{
+  "name": "WarLok - Warung Lokal Hyperlokal & Reservasi",
+  "description": "Platform web komunitas kos & mahasiswa untuk katalog inventaris warung kelontong terdekat, reservasi barang ambil di tempat, dan pelaporan akurasi stok berbasis komunitas.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
