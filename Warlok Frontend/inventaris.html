@@ -11,116 +11,150 @@
 
   <!-- KONTEN FITUR (Tanpa Sidebar & Header agar tidak dobel saat dipanggil di index.html) -->
   <main class="max-w-7xl mx-auto">
-      <!-- ================================================================= -->
-      <!-- FITUR 1: INVENTARIS TOKO (PIC: Dhafy Ahmad Zubaidi)               -->
-      <!-- ================================================================= -->
-      <section id="halaman-inventaris" class="space-y-6 ">
+    <!-- ================================================================= -->
+    <!-- FITUR 1: INVENTARIS TOKO (PIC: Dhafy Ahmad Zubaidi)               -->
+    <!-- ================================================================= -->
+    <section id="halaman-inventaris" class="space-y-6">
 
-        <div class="bg-white p-6 rounded-xl border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div class="bg-white p-6 rounded-xl border border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-[#2C3E50] mt-2">Inventaris Toko & Master Data Produk</h2>
+          <p class="text-sm text-gray-500">Kelola varian, harga, stok barang, fitur quick-toggle status, dan peringatan stok menipis.</p>
+        </div>
+        <button type="button" onclick="tampilPesan('Simulasi: Form tambah produk dibuka')" class="px-4 py-2.5 bg-[#E74C3C] hover:bg-red-700 text-white text-sm font-bold rounded-lg cursor-pointer inline-flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span>Tambah Barang Baru</span>
+        </button>
+      </div>
+
+      <!-- Form Sederhana Tambah / Update Stok Cepat -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200">
+        <h3 class="text-base font-bold text-[#2C3E50] mb-4">Form Tambah / Update Barang Kios</h3>
+        <form onsubmit="event.preventDefault(); tampilPesan('Data produk berhasil disimpan ke inventaris!');" class="grid grid-cols-1 md:grid-cols-5 gap-4 text-xs">
           <div>
-            <h2 class="text-2xl font-bold text-[#2C3E50] mt-2">Inventaris Toko & Master Data Produk</h2>
-            <p class="text-sm text-gray-500">Kelola varian, harga, stok barang, fitur quick-toggle status, dan peringatan stok menipis.</p>
+            <label class="block font-bold mb-1">Nama Produk</label>
+            <input type="text" placeholder="Contoh: Indomie Goreng" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
           </div>
-          <button type="button" onclick="tampilPesan('Simulasi: Form tambah produk dibuka')" class="px-4 py-2.5 bg-[#E74C3C] hover:bg-red-700 text-white text-sm font-bold rounded-lg cursor-pointer">
-            + Tambah Barang Baru
-          </button>
-        </div>
-
-        <!-- Form Sederhana Tambah / Update Stok Cepat -->
-        <div class="bg-white p-6 rounded-xl border border-gray-200">
-          <h3 class="text-base font-bold text-[#2C3E50] mb-4">Form Tambah / Update Barang Kios</h3>
-          <form onsubmit="event.preventDefault(); tampilPesan('Data produk berhasil disimpan ke inventaris!');" class="grid grid-cols-1 md:grid-cols-5 gap-4 text-xs">
-            <div>
-              <label class="block font-bold mb-1">Nama Produk</label>
-              <input type="text" placeholder="Contoh: Indomie Goreng" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
-            </div>
-            <div>
-              <label class="block font-bold mb-1">Varian / Satuan</label>
-              <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
-                <option>Bungkus (Satuan)</option>
-                <option>Renceng (10 Sachet)</option>
-                <option>Kilogram (kg)</option>
-                <option>Karung 5kg</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-bold mb-1">Harga Jual (Rp)</label>
-              <input type="number" value="3100" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
-            </div>
-            <div>
-              <label class="block font-bold mb-1">Jumlah Stok</label>
-              <input type="number" value="25" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
-            </div>
-            <div class="flex items-end">
-              <button type="submit" class="w-full py-2.5 bg-[#2C3E50] hover:bg-slate-700 text-white font-bold rounded-lg cursor-pointer">
-                Simpan Stok
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Tabel Inventaris Toko & Quick Toggle -->
-        <div class="bg-white p-6 rounded-xl border border-gray-200">
-          <h3 class="text-base font-bold text-[#2C3E50] mb-4">Daftar Inventaris Warung Bu Siti</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b border-gray-200 text-gray-400 uppercase">
-                  <th class="py-3 px-2">SKU</th>
-                  <th class="py-3 px-2">NAMA BARANG & VARIAN</th>
-                  <th class="py-3 px-2">HARGA</th>
-                  <th class="py-3 px-2">STOK SAAT INI</th>
-                  <th class="py-3 px-2">PERINGATAN STOK</th>
-                  <th class="py-3 px-2">QUICK-TOGGLE STATUS</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-100">
-                <tr>
-                  <td class="py-3 px-2 font-mono">IND-GRG-85</td>
-                  <td class="py-3 px-2 font-bold">Indomie Goreng Reguler (85g)</td>
-                  <td class="py-3 px-2">Rp 3.100</td>
-                  <td class="py-3 px-2 font-bold text-[#E74C3C]">3 bks (Min: 20)</td>
-                  <td class="py-3 px-2"><span class="bg-red-100 text-[#E74C3C] font-bold px-2 py-1 rounded">⚠️ Stok Menipis</span></td>
-                  <td class="py-3 px-2">
-                    <button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer">Aktif (Tersedia)</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="py-3 px-2 font-mono">BRS-STR-05</td>
-                  <td class="py-3 px-2 font-bold">Beras Setra Ramos (Karung 5kg)</td>
-                  <td class="py-3 px-2">Rp 69.500</td>
-                  <td class="py-3 px-2 font-bold text-[#E74C3C]">1 karung (Min: 5)</td>
-                  <td class="py-3 px-2"><span class="bg-red-100 text-[#E74C3C] font-bold px-2 py-1 rounded">⚠️ Stok Menipis</span></td>
-                  <td class="py-3 px-2">
-                    <button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer">Aktif (Tersedia)</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="py-3 px-2 font-mono">TLR-AYM-01</td>
-                  <td class="py-3 px-2 font-bold">Telur Ayam Ras Grade A (1kg)</td>
-                  <td class="py-3 px-2">Rp 27.500</td>
-                  <td class="py-3 px-2 font-bold text-[#2C3E50]">16 kg (Min: 8)</td>
-                  <td class="py-3 px-2"><span class="bg-green-100 text-green-700 font-bold px-2 py-1 rounded">✔ Stok Aman</span></td>
-                  <td class="py-3 px-2">
-                    <button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer">Aktif (Tersedia)</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="py-3 px-2 font-mono">LPG-3KG-01</td>
-                  <td class="py-3 px-2 font-bold">Gas LPG 3kg Subsidi (Tabung)</td>
-                  <td class="py-3 px-2">Rp 21.000</td>
-                  <td class="py-3 px-2 font-bold text-gray-400">0 tabung (Min: 5)</td>
-                  <td class="py-3 px-2"><span class="bg-gray-200 text-gray-700 font-bold px-2 py-1 rounded">✖ Stok Habis</span></td>
-                  <td class="py-3 px-2">
-                    <button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-gray-400 text-white font-bold rounded-full cursor-pointer">Nonaktif (Habis)</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div>
+            <label class="block font-bold mb-1">Varian / Satuan</label>
+            <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+              <option>Bungkus (Satuan)</option>
+              <option>Renceng (10 Sachet)</option>
+              <option>Kilogram (kg)</option>
+              <option>Karung 5kg</option>
+            </select>
           </div>
-        </div>
+          <div>
+            <label class="block font-bold mb-1">Harga Jual (Rp)</label>
+            <input type="number" value="3100" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+          </div>
+          <div>
+            <label class="block font-bold mb-1">Jumlah Stok</label>
+            <input type="number" value="25" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+          </div>
+          <div class="flex items-end">
+            <button type="submit" class="w-full py-2.5 bg-[#2C3E50] hover:bg-slate-700 text-white font-bold rounded-lg cursor-pointer inline-flex items-center justify-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+              <span>Simpan Stok</span>
+            </button>
+          </div>
+        </form>
+      </div>
 
-      </section>
+      <!-- Tabel Inventaris Toko & Quick Toggle -->
+      <div class="bg-white p-6 rounded-xl border border-gray-200">
+        <h3 class="text-base font-bold text-[#2C3E50] mb-4">Daftar Inventaris Warung Bu Siti</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-gray-200 text-gray-400 uppercase">
+                <th class="py-3 px-2">SKU</th>
+                <th class="py-3 px-2">NAMA BARANG & VARIAN</th>
+                <th class="py-3 px-2">HARGA</th>
+                <th class="py-3 px-2">STOK SAAT INI</th>
+                <th class="py-3 px-2">PERINGATAN STOK</th>
+                <th class="py-3 px-2">QUICK-TOGGLE STATUS</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <tr>
+                <td class="py-3 px-2 font-mono">IND-GRG-85</td>
+                <td class="py-3 px-2 font-bold">Indomie Goreng Reguler (85g)</td>
+                <td class="py-3 px-2">Rp 3.100</td>
+                <td class="py-3 px-2 font-bold text-[#E74C3C]">3 bks (Min: 20)</td>
+                <td class="py-3 px-2">
+                  <span class="bg-red-100 text-[#E74C3C] font-bold px-2.5 py-1 rounded inline-flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 shrink-0">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                    </svg>
+                    <span>Stok Menipis</span>
+                  </span>
+                </td>
+                <td class="py-3 px-2">
+                  <button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer">Aktif (Tersedia)</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 px-2 font-mono">BRS-STR-05</td>
+                <td class="py-3 px-2 font-bold">Beras Setra Ramos (Karung 5kg)</td>
+                <td class="py-3 px-2">Rp 69.500</td>
+                <td class="py-3 px-2 font-bold text-[#E74C3C]">1 karung (Min: 5)</td>
+                <td class="py-3 px-2">
+                  <span class="bg-red-100 text-[#E74C3C] font-bold px-2.5 py-1 rounded inline-flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 shrink-0">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                    </svg>
+                    <span>Stok Menipis</span>
+                  </span>
+                </td>
+                <td class="py-3 px-2">
+                  <button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer">Aktif (Tersedia)</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 px-2 font-mono">TLR-AYM-01</td>
+                <td class="py-3 px-2 font-bold">Telur Ayam Ras Grade A (1kg)</td>
+                <td class="py-3 px-2">Rp 27.500</td>
+                <td class="py-3 px-2 font-bold text-[#2C3E50]">16 kg (Min: 8)</td>
+                <td class="py-3 px-2">
+                  <span class="bg-green-100 text-green-700 font-bold px-2.5 py-1 rounded inline-flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 shrink-0">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <span>Stok Aman</span>
+                  </span>
+                </td>
+                <td class="py-3 px-2">
+                  <button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer">Aktif (Tersedia)</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 px-2 font-mono">LPG-3KG-01</td>
+                <td class="py-3 px-2 font-bold">Gas LPG 3kg Subsidi (Tabung)</td>
+                <td class="py-3 px-2">Rp 21.000</td>
+                <td class="py-3 px-2 font-bold text-gray-400">0 tabung (Min: 5)</td>
+                <td class="py-3 px-2">
+                  <span class="bg-gray-200 text-gray-700 font-bold px-2.5 py-1 rounded inline-flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 shrink-0">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                    <span>Stok Habis</span>
+                  </span>
+                </td>
+                <td class="py-3 px-2">
+                  <button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-gray-400 text-white font-bold rounded-full cursor-pointer">Nonaktif (Habis)</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
   </main>
 
   <!-- Notifikasi Popup Sederhana -->
@@ -140,13 +174,11 @@
 
     // 2. Fungsi Quick-Toggle status barang (khusus halaman Inventaris)
     function ubahToggle(tombol) {
-      if (tombol.textContent.includes('Aktif')) {
-        tombol.textContent = 'Nonaktif (Habis)';
-        tombol.className = 'px-3 py-1 bg-gray-400 text-white font-bold rounded-full cursor-pointer';
-      } else {
-        tombol.textContent = 'Aktif (Tersedia)';
-        tombol.className = 'px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer';
-      }
+      const isAktif = tombol.textContent.includes('Aktif');
+      tombol.textContent = isAktif ? 'Nonaktif (Habis)' : 'Aktif (Tersedia)';
+      tombol.className = isAktif
+        ? 'px-3 py-1 bg-gray-400 text-white font-bold rounded-full cursor-pointer'
+        : 'px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer';
     }
 
     // 3. Tampilkan pesan popup sederhana
@@ -158,8 +190,6 @@
         kotak.classList.add('hidden');
       }, 2500);
     }
-
-
   </script>
 </body>
 </html>
