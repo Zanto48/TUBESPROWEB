@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /warlok/
+
+    # 1. Biarkan request ke folder api/ ditangani oleh api/.htaccess (Laravel 11)
+    RewriteRule ^api(/.*)?$ - [L]
+
+    # 2. Arahkan asset statis hasil build (assets/*) ke dist/assets/*
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^assets/(.*)$ dist/assets/$1 [L]
+
+    # 3. Arahkan akses root /warlok/ atau /warlok/index.html ke dist/index.html
+    RewriteRule ^$ dist/index.html [L]
+    RewriteRule ^index\.html$ dist/index.html [L]
+</IfModule>
