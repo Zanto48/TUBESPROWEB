@@ -226,14 +226,14 @@
 </div>
 <!-- Bottom Action Buttons Pills -->
 <div class="grid grid-cols-2 gap-3 pt-2">
-<button class="w-full py-3 rounded-full bg-[#E74C3C] text-white font-bold text-xs hover:bg-[#D63031] transition flex items-center justify-center gap-1.5 shadow-sm">
+<button type="button" onclick="bukaHalaman('reservasi')" class="w-full py-3 rounded-full bg-[#E74C3C] text-white font-bold text-xs hover:bg-[#D63031] transition flex items-center justify-center gap-1.5 shadow-sm cursor-pointer">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
 <polyline points="20 6 9 17 4 12"></polyline>
 </svg>
               Proses Ambil
             </button>
-<button class="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2C3E50] font-bold text-xs transition">
-              Batalkan
+<button type="button" onclick="bukaHalaman('reservasi')" class="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2C3E50] font-bold text-xs transition cursor-pointer">
+              Lihat Antrean
             </button>
 </div>
 </section>
@@ -245,7 +245,7 @@
 <h3 class="font-extrabold text-[#2C3E50] text-base">Aktivitas Terbaru &amp; Validasi Komunitas</h3>
 <p class="text-xs text-slate-400 font-medium">Laporan realtime mahasiswa sekitar kosan &amp; kampus</p>
 </div>
-<button class="text-xs font-bold text-[#E74C3C] hover:underline flex items-center gap-1">
+<button type="button" onclick="bukaHalaman('ulasan')" class="text-xs font-bold text-[#E74C3C] hover:underline flex items-center gap-1 cursor-pointer">
                 Lihat Semua
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
 <polyline points="9 18 15 12 9 6"></polyline>
@@ -374,7 +374,7 @@
 </div>
 </div>
 <!-- Bottom Action to restock -->
-<button class="w-full py-3 rounded-full bg-[#2C3E50] text-white font-bold text-xs hover:bg-[#1A252F] transition flex items-center justify-center gap-2">
+<button type="button" onclick="bukaHalaman('inventaris')" class="w-full py-3 rounded-full bg-[#2C3E50] text-white font-bold text-xs hover:bg-[#1A252F] transition flex items-center justify-center gap-2 cursor-pointer">
 <svg class="w-4 h-4 text-[#E74C3C]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
 <circle cx="9" cy="21" r="1"></circle>
 <circle cx="20" cy="21" r="1"></circle>
@@ -387,5 +387,12 @@
 </main>
 </div>
 
-
+<script>
+  function bukaHalaman(namaFitur) {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ tipe: 'PINDAH_MENU', fitur: namaFitur }, '*');
+    }
+    window.location.href = namaFitur + '.html';
+  }
+</script>
 </body></html>

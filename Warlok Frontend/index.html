@@ -147,11 +147,20 @@
 
   <!-- ================= 3. SCRIPT PEMANGGIL & PENGATUR ROLE ================= -->
   <script>
-    // Konfigurasi hak akses (authorization mapping) per role
+    // Konfigurasi hak akses (authorization mapping) per role:
+    // - konsumen: hanya mencari barang (showcase), mereservasi & membayar (reservasi), serta memberi ulasan/voting stok (ulasan)
+    // - merchant: mengelola dasbor warung, stok inventaris, memproses antrean reservasi di kasir, melihat ulasan, & mengajukan profil toko
+    // - admin: memverifikasi toko baru & memantau seluruh modul sistem
     const rolePermissions = {
-      merchant: ['dashboard', 'inventaris', 'autentikasi'],
-      konsumen: ['dashboard', 'showcase', 'reservasi', 'ulasan', 'autentikasi'],
+      merchant: ['dashboard', 'inventaris', 'reservasi', 'ulasan', 'autentikasi'],
+      konsumen: ['showcase', 'reservasi', 'ulasan'],
       admin: ['dashboard', 'inventaris', 'showcase', 'reservasi', 'ulasan', 'autentikasi']
+    };
+
+    const roleDefaultPage = {
+      merchant: { id: 'nav-dashboard', file: 'dashboard.html', title: 'Fitur 6: Dashboard Analitik', pic: 'I Putu Gede Agastya Krisna Widartha' },
+      konsumen: { id: 'nav-showcase', file: 'showcase.html', title: 'Fitur 2: Showcase & Radius', pic: 'Rayfito Krisna Wijaya' },
+      admin:    { id: 'nav-autentikasi', file: 'autentikasi.html', title: 'Fitur 4: Autentikasi & Verifikasi Toko', pic: 'William Peter Vanx Najoan' }
     };
 
     let currentRole = 'merchant';
@@ -162,6 +171,16 @@
 
     const btnInactiveClass = "menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-medium text-gray-300 hover:bg-white/10 flex items-center gap-2.5 cursor-pointer";
     const btnActiveClass = "menu-btn w-full text-left px-4 py-2.5 rounded-xl text-xs font-bold bg-white text-[#2C3E50] flex items-center gap-2.5 cursor-pointer";
+
+    function kirimRoleKeIframe() {
+      try {
+        localStorage.setItem('warlok_role', currentRole);
+      } catch (e) {}
+      const frame = document.getElementById('frameFitur');
+      if (frame && frame.contentWindow) {
+        frame.contentWindow.postMessage({ tipe: 'GANTI_ROLE', role: currentRole }, '*');
+      }
+    }
 
     function panggilFitur(namaFile, judulFitur, namaPic, tombolAktif) {
       const featureKey = tombolAktif ? tombolAktif.getAttribute('data-feature') : null;
@@ -189,9 +208,16 @@
         tombolAktif.className = btnActiveClass;
       }
 
+      try {
+        localStorage.setItem('warlok_role', currentRole);
+      } catch (e) {}
+
       // Jika dibuka di browser laptop (file dalam 1 folder), panggil file HTML-nya:
       if (window.self === window.top) {
         frame.removeAttribute('srcdoc');
+        frame.onload = function() {
+          kirimRoleKeIframe();
+        };
         frame.src = namaFile;
       } else {
         frame.srcdoc = `
@@ -224,15 +250,16 @@
               </div>
               <h3 class="text-xl font-bold text-[#2C3E50]">Akses Dibatasi</h3>
               <p class="text-xs text-gray-600 leading-relaxed">Peran <span class="uppercase font-bold text-[#E74C3C]">${currentRole}</span> tidak memiliki hak akses untuk membuka menu <strong class="text-slate-800">${namaFitur}</strong>.</p>
-              <button onclick="window.parent.resetToDefaultDashboard()" class="mt-2 px-4 py-2 bg-[#2C3E50] text-white text-xs font-bold rounded-xl cursor-pointer hover:bg-slate-700">Kembali ke Dashboard Utama</button>
+              <button onclick="window.parent.resetToDefaultDashboard()" class="mt-2 px-4 py-2 bg-[#2C3E50] text-white text-xs font-bold rounded-xl cursor-pointer hover:bg-slate-700">Kembali ke Halaman Utama Peran</button>
             </div>
           </body>
         </html>`;
     }
 
     function resetToDefaultDashboard() {
-      const dashBtn = document.getElementById('nav-dashboard');
-      panggilFitur('dashboard.html', 'Fitur 6: Dashboard Analitik', 'I Putu Gede Agastya Krisna Widartha', dashBtn);
+      const def = roleDefaultPage[currentRole] || roleDefaultPage.merchant;
+      const targetBtn = document.getElementById(def.id);
+      panggilFitur(def.file, def.title, def.pic, targetBtn);
     }
 
     function gantiRole(kodeRole, labelSidebar, teksSapaan, tombolRole) {
@@ -254,12 +281,8 @@
 
       if (!allowedFeatures.includes(currentActiveFeature)) {
         resetToDefaultDashboard();
-      }
-
-      // Kirim sinyal perubahan role ke dalam iframe fitur yang sedang terbuka
-      const frame = document.getElementById('frameFitur');
-      if (frame && frame.contentWindow) {
-        frame.contentWindow.postMessage({ tipe: 'GANTI_ROLE', role: kodeRole }, '*');
+      } else {
+        kirimRoleKeIframe();
       }
     }
 

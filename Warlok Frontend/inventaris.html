@@ -32,27 +32,27 @@
       <!-- Form Sederhana Tambah / Update Stok Cepat -->
       <div class="bg-white p-6 rounded-xl border border-gray-200">
         <h3 class="text-base font-bold text-[#2C3E50] mb-4">Form Tambah / Update Barang Kios</h3>
-        <form onsubmit="event.preventDefault(); tampilPesan('Data produk berhasil disimpan ke inventaris!');" class="grid grid-cols-1 md:grid-cols-5 gap-4 text-xs">
+        <form id="formInventaris" onsubmit="simpanProdukInventaris(event)" class="grid grid-cols-1 md:grid-cols-5 gap-4 text-xs">
           <div>
             <label class="block font-bold mb-1">Nama Produk</label>
-            <input type="text" placeholder="Contoh: Indomie Goreng" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+            <input id="invNama" type="text" placeholder="Contoh: Indomie Goreng" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
           </div>
           <div>
             <label class="block font-bold mb-1">Varian / Satuan</label>
-            <select class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
-              <option>Bungkus (Satuan)</option>
-              <option>Renceng (10 Sachet)</option>
-              <option>Kilogram (kg)</option>
-              <option>Karung 5kg</option>
+            <select id="invSatuan" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg">
+              <option value="bks">Bungkus (Satuan)</option>
+              <option value="renceng">Renceng (10 Sachet)</option>
+              <option value="kg">Kilogram (kg)</option>
+              <option value="karung">Karung 5kg</option>
             </select>
           </div>
           <div>
             <label class="block font-bold mb-1">Harga Jual (Rp)</label>
-            <input type="number" value="3100" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+            <input id="invHarga" type="number" value="3100" min="100" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
           </div>
           <div>
             <label class="block font-bold mb-1">Jumlah Stok</label>
-            <input type="number" value="25" class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
+            <input id="invStok" type="number" value="25" min="0" required class="w-full p-2.5 bg-[#F5F5F5] border border-gray-300 rounded-lg" />
           </div>
           <div class="flex items-end">
             <button type="submit" class="w-full py-2.5 bg-[#2C3E50] hover:bg-slate-700 text-white font-bold rounded-lg cursor-pointer inline-flex items-center justify-center gap-1.5">
@@ -80,7 +80,7 @@
                 <th class="py-3 px-2">QUICK-TOGGLE STATUS</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody id="tabelBodyInventaris" class="divide-y divide-gray-100">
               <tr>
                 <td class="py-3 px-2 font-mono">IND-GRG-85</td>
                 <td class="py-3 px-2 font-bold">Indomie Goreng Reguler (85g)</td>
@@ -189,6 +189,47 @@
       setTimeout(function() {
         kotak.classList.add('hidden');
       }, 2500);
+    }
+
+    // 4. Algoritma Tambah / Update Stok Barang ke Tabel Inventaris
+    function simpanProdukInventaris(event) {
+      event.preventDefault();
+      const nama = document.getElementById('invNama').value.trim();
+      const satuan = document.getElementById('invSatuan').value;
+      const harga = parseInt(document.getElementById('invHarga').value || '0', 10);
+      const stok = parseInt(document.getElementById('invStok').value || '0', 10);
+      const minStok = 5;
+
+      const kodeSku = nama.substring(0, 3).toUpperCase() + '-NEW-' + Math.floor(10 + Math.random() * 89);
+      const tbody = document.getElementById('tabelBodyInventaris');
+
+      let badgePeringatan = '';
+      let warnaStok = 'text-[#2C3E50]';
+      let tombolToggle = '<button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-green-600 text-white font-bold rounded-full cursor-pointer">Aktif (Tersedia)</button>';
+
+      if (stok === 0) {
+        warnaStok = 'text-gray-400';
+        badgePeringatan = '<span class="bg-gray-200 text-gray-700 font-bold px-2.5 py-1 rounded inline-flex items-center gap-1.5"><span>Stok Habis</span></span>';
+        tombolToggle = '<button type="button" onclick="ubahToggle(this)" class="px-3 py-1 bg-gray-400 text-white font-bold rounded-full cursor-pointer">Nonaktif (Habis)</button>';
+      } else if (stok <= minStok) {
+        warnaStok = 'text-[#E74C3C]';
+        badgePeringatan = '<span class="bg-red-100 text-[#E74C3C] font-bold px-2.5 py-1 rounded inline-flex items-center gap-1.5"><span>Stok Menipis</span></span>';
+      } else {
+        badgePeringatan = '<span class="bg-green-100 text-green-700 font-bold px-2.5 py-1 rounded inline-flex items-center gap-1.5"><span>Stok Aman</span></span>';
+      }
+
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="py-3 px-2 font-mono">' + kodeSku + '</td>' +
+        '<td class="py-3 px-2 font-bold">' + nama + ' (' + satuan + ')</td>' +
+        '<td class="py-3 px-2">Rp ' + harga.toLocaleString('id-ID') + '</td>' +
+        '<td class="py-3 px-2 font-bold ' + warnaStok + '">' + stok + ' ' + satuan + ' (Min: ' + minStok + ')</td>' +
+        '<td class="py-3 px-2">' + badgePeringatan + '</td>' +
+        '<td class="py-3 px-2">' + tombolToggle + '</td>';
+
+      tbody.insertBefore(tr, tbody.firstChild);
+      document.getElementById('invNama').value = '';
+      tampilPesan('Produk "' + nama + '" berhasil ditambahkan ke daftar inventaris!');
     }
   </script>
 </body>
