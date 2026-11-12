@@ -14,12 +14,139 @@
       color: #2C3E50;
       -webkit-font-smoothing: antialiased;
     }
-    .card-bubble {
-      background: #FFFFFF;
-      border-radius: 28px;
-      border: 1px solid #E2E8F0;
-      box-shadow: 0 4px 20px -2px rgba(44, 62, 80, 0.05);
-    }
+     .card-bubble {
+       background: #FFFFFF;
+       border-radius: 28px;
+       border: 1px solid #E2E8F0;
+       box-shadow: 0 4px 20px -2px rgba(44, 62, 80, 0.05);
+       transition: transform 220ms cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 220ms cubic-bezier(0.25,0.46,0.45,0.94), border-color 220ms ease;
+       will-change: transform;
+     }
+     .card-bubble:hover {
+       transform: translateY(-4px);
+       box-shadow: 0 12px 30px -4px rgba(44, 62, 80, 0.12);
+       border-color: #CBD5E1;
+     }
+     .card-bubble:active {
+       transform: translateY(-1px) scale(0.995);
+       transition-duration: 120ms;
+     }
+     .icon-bounce {
+       transition: transform 200ms ease;
+     }
+     .card-bubble:hover .icon-bounce {
+       transform: scale(1.06);
+     }
+     .btn-press {
+       transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+     }
+     .btn-press:hover {
+       transform: translateY(-1px);
+     }
+     .btn-press:active {
+       transform: translateY(0) scale(0.98);
+     }
+     .badge-transition {
+       transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+     }
+     .progress-fill {
+       transition: width 900ms cubic-bezier(0.25,0.46,0.45,0.94);
+     }
+     @keyframes fadeUp {
+       0% { opacity: 0; translate: 0 16px; }
+       100% { opacity: 1; translate: 0 0; }
+     }
+     @keyframes fadeIn {
+       0% { opacity: 0; }
+       100% { opacity: 1; }
+     }
+     @keyframes scaleIn {
+       0% { opacity: 0; scale: 0.96; }
+       100% { opacity: 1; scale: 1; }
+     }
+     @keyframes fadeOut {
+       0% { opacity: 1; }
+       100% { opacity: 0; }
+     }
+     @keyframes slideUp {
+       0% { opacity: 0; translate: 0 24px; }
+       100% { opacity: 1; translate: 0 0; }
+     }
+     @keyframes barRise {
+       0% { transform: scaleY(0); }
+       100% { transform: scaleY(1); }
+     }
+     .bar-rect {
+       transform-box: fill-box;
+       transform-origin: bottom;
+       transform: scaleY(0);
+     }
+     .bar-rect.anim-bar-rise {
+       animation: barRise 600ms cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+     }
+     .anim-fade-up {
+       opacity: 0;
+       animation: fadeUp 500ms cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+     }
+     .anim-fade-in {
+       opacity: 0;
+       animation: fadeIn 350ms ease forwards;
+     }
+     .anim-scale-in {
+       opacity: 0;
+       animation: scaleIn 400ms cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+     }
+     .anim-slide-up {
+       opacity: 0;
+       animation: slideUp 450ms cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+     }
+     .anim-bar-rise {
+       transform-origin: bottom;
+       animation: barRise 600ms cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+     }
+     .anim-hidden {
+       opacity: 0;
+     }
+     .modal-backdrop {
+       transition: opacity 250ms ease;
+     }
+     #cardModal {
+       opacity: 0;
+       transition: opacity 220ms ease;
+     }
+     #cardModal.modal-open {
+       opacity: 1;
+     }
+     .modal-panel {
+       opacity: 0;
+       scale: 0.97;
+       transition: opacity 240ms ease, scale 280ms cubic-bezier(0.25,0.46,0.45,0.94);
+     }
+     #cardModal.modal-open .modal-panel {
+       opacity: 1;
+       scale: 1;
+     }
+     .role-transitioning {
+       pointer-events: none;
+     }
+     .role-transition-out {
+       animation: fadeOut 200ms ease forwards;
+     }
+     .role-transition-in {
+       animation: slideUp 400ms cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+     }
+     @media (prefers-reduced-motion: reduce) {
+       .anim-fade-up, .anim-fade-in, .anim-scale-in, .anim-slide-up, .anim-bar-rise,
+       .role-transition-out, .role-transition-in, .modal-panel, .modal-backdrop {
+         animation: none !important;
+         transition: none !important;
+         opacity: 1 !important;
+         transform: none !important;
+       }
+       .card-bubble:hover {
+         transform: none;
+       }
+     }
     .detached-panel {
       background: #FFFFFF;
       border-radius: 36px;
@@ -54,7 +181,7 @@
 <!-- 2. TOP NAVIGATION BAR (Detached & Floating) -->
 
 <!-- 3. BENTO GRID 3-COLUMN LAYOUT -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5" data-role-panel="merchant">
 <!-- ================= CARD 1: STATUS WARLOK & TARGET (COL-SPAN-4) ================= -->
 <section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
 <div>
@@ -131,48 +258,8 @@
 <span class="text-3xl font-extrabold text-[#2C3E50] tracking-tight">1.428</span>
 <span class="text-xs font-semibold text-slate-400">Pengunjung / Minggu</span>
 </div>
-<!-- BARS VISUALIZATION (Rounded, Stripe Pattern, Solid Coral Red Peak) -->
-<div class="h-48 flex items-end justify-between gap-2.5 pt-4 px-1">
-<!-- SEN -->
-<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 55%;" title="Senin: 180 pengunjung"></div>
-<span class="text-[10px] font-bold text-slate-400">SEN</span>
-</div>
-<!-- SEL -->
-<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 40%;" title="Selasa: 140 pengunjung"></div>
-<span class="text-[10px] font-bold text-slate-400">SEL</span>
-</div>
-<!-- RAB -->
-<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 70%;" title="Rabu: 230 pengunjung"></div>
-<span class="text-[10px] font-bold text-slate-400">RAB</span>
-</div>
-<!-- KAM (PEAK WITH HIGHLIGHT) -->
-<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end relative">
-<!-- Peak Indicator Tooltip -->
-<div class="absolute -top-7 px-1.5 py-0.5 rounded-full bg-[#E74C3C] text-white text-[9px] font-extrabold whitespace-nowrap shadow-sm">
-                  +17.8%
-                </div>
-<div class="w-full bg-[#E74C3C] rounded-full shadow-md shadow-[#E74C3C]/25 transition-all hover:scale-105" style="height: 92%;" title="Kamis: 340 pengunjung (Paling Ramai)"></div>
-<span class="text-[10px] font-extrabold text-[#E74C3C]">KAM</span>
-</div>
-<!-- JUM -->
-<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 80%;" title="Jumat: 290 pengunjung"></div>
-<span class="text-[10px] font-bold text-slate-400">JUM</span>
-</div>
-<!-- SAB -->
-<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 60%;" title="Sabtu: 210 pengunjung"></div>
-<span class="text-[10px] font-bold text-slate-400">SAB</span>
-</div>
-<!-- MIN -->
-<div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-<div class="w-full bar-stripes rounded-full transition-all hover:opacity-80" style="height: 35%;" title="Minggu: 110 pengunjung"></div>
-<span class="text-[10px] font-bold text-slate-400">MIN</span>
-</div>
-</div>
+<!-- BARS VISUALIZATION (SVG: grid, label sumbu, tooltip) -->
+<div id="chart-merchant-visits" class="relative h-48 pt-4"></div>
 </div>
 <div class="mt-4 pt-3 flex items-center justify-between text-xs text-slate-500 font-medium">
 <span class="flex items-center gap-1.5">
@@ -191,7 +278,7 @@
                 Siap Diambil
               </span>
 </div>
-<p class="text-xs text-slate-400 font-medium mb-4">Antrean lock-stock aktif, menunggu pick-up</p>
+<p class="text-xs text-slate-400 font-medium mb-4">Mahasiswa sudah bayar via QRIS WarLok</p>
 <!-- Big Gauge Number Style -->
 <div class="bg-slate-50 border border-slate-200/70 rounded-3xl p-5 mb-4">
 <div class="flex items-baseline justify-between">
@@ -203,20 +290,7 @@
                   Est. Rp 680.000
                 </span>
 </div>
-<!-- Sparkline SVG Chart with Coral Red Stroke -->
-<div class="mt-4">
-<svg class="w-full h-12" fill="none" viewBox="0 0 200 40">
-<path d="M0 30 Q 30 10, 60 25 T 120 15 T 160 8 T 200 18" stroke="#E74C3C" stroke-linecap="round" stroke-width="2.5"></path>
-<path d="M0 30 Q 30 10, 60 25 T 120 15 T 160 8 T 200 18 L 200 40 L 0 40 Z" fill="url(#sparkline-grad-coral)" opacity="0.15"></path>
-<circle cx="160" cy="8" fill="#E74C3C" r="4" stroke="#FFFFFF" stroke-width="2"></circle>
-<defs>
-<linearGradient gradientUnits="userSpaceOnUse" id="sparkline-grad-coral" x1="0" x2="0" y1="0" y2="40">
-<stop stop-color="#E74C3C"></stop>
-<stop offset="1" stop-color="#E74C3C" stop-opacity="0"></stop>
-</linearGradient>
-</defs>
-</svg>
-</div>
+<div id="chart-merchant-reservations" class="relative h-28 mt-4"></div>
 </div>
 <!-- Quick list info -->
 <div class="text-xs text-slate-600 flex items-center justify-between mb-4 px-1">
@@ -384,8 +458,1138 @@
           </button>
 </section>
 </div>
+<!-- ================= PANEL KONSUMEN ================= -->
+<div class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5" data-role-panel="konsumen">
+<!-- CARD 1: RINGKASAN AKTIVITAS KONSUMEN -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-bold tracking-wider text-slate-400 uppercase">Ringkasan Aktivitas Konsumen</span>
+<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#FDEAEA] text-[#E74C3C]">Aktif</span>
+</div>
+<div class="rounded-3xl p-6 bg-gradient-to-br from-[#2C3E50] via-[#243342] to-[#1A252F] text-white shadow-lg shadow-[#2C3E50]/25 relative overflow-hidden">
+<div class="absolute -right-8 -bottom-8 w-40 h-40 rounded-full bg-white/5 pointer-events-none"></div>
+<div class="absolute -right-2 -top-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-[10px] font-semibold text-slate-300 uppercase tracking-widest">Student Pass</p>
+<p class="text-base font-extrabold tracking-tight">WarLok Mahasiswa</p>
+</div>
+<div class="flex items-center gap-1.5 opacity-90">
+<div class="w-8 h-8 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M6 8h12l-1 12H7L6 8Z"></path>
+<path d="M9 8V6a3 3 0 1 1 6 0v2"></path>
+</svg>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<p class="text-xs text-slate-300 font-medium mb-1">Total Reservasi Pernah Dibuat</p>
+<div class="text-2xl font-extrabold tracking-tight">18 Reservasi</div>
+<div class="text-xs text-slate-300/90 font-medium mt-0.5">Aktif: 3 • Ulasan: 11 • Selesai: 15</div>
+</div>
+<div class="w-full bg-black/25 h-2 rounded-full overflow-hidden mb-4 p-0.5">
+<div class="bg-[#E74C3C] h-full rounded-full" style="width: 72%"></div>
+</div>
+<div class="flex justify-between items-center text-[11px] font-semibold tracking-wider text-slate-300 pt-2 border-t border-white/10">
+<span class="">AKTIF • KELOMPOK 7</span>
+<span class="">ID: WLK-7702</span>
+</div>
+</div>
+</div>
+<div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold text-slate-500">Pencarian Barang Hari Ini</p>
+<p class="text-xl font-extrabold text-[#2C3E50] tracking-tight mt-0.5">24 Pencarian</p>
+</div>
+<div class="flex items-center gap-1 bg-[#FDEAEA] text-[#E74C3C] px-3 py-1.5 rounded-full text-xs font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="18 15 12 9 6 15"></polyline>
+</svg>
+<span class="">+8.2%</span>
+</div>
+</div>
+</section>
+<!-- CARD 2: TREN PENCARIAN BARANG -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-extrabold text-[#2C3E50] text-base">Tren Pencarian Barang</h3>
+<p class="text-xs text-slate-400 font-medium">Kategori & barang yang sering dicari</p>
+</div>
+<div class="bg-slate-100 p-1 rounded-full flex text-xs font-bold">
+<button class="px-3 py-1 rounded-full bg-[#E74C3C] text-white shadow-sm transition">Bulanan</button>
+<button class="px-3 py-1 rounded-full text-slate-500 hover:text-[#2C3E50] transition">Tahunan</button>
+</div>
+</div>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-3xl font-extrabold text-[#2C3E50] tracking-tight">86</span>
+<span class="text-xs font-semibold text-slate-400">Pencarian / Minggu</span>
+</div>
+<div id="chart-konsumen-search" class="relative h-48 pt-4"></div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs text-slate-500 font-medium">
+<span class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#E74C3C]"></span> Paling dicari: Makanan instan
+            </span>
+<span class="text-slate-400">Update 5 mnt lalu</span>
+</div>
+</section>
+<!-- CARD 3: RESERVASI SAYA -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-extrabold text-[#2C3E50] text-base">Reservasi Saya</h3>
+<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-[#FDEAEA] text-[#E74C3C] border border-[#E74C3C]/20 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#E74C3C]"></span>
+                Siap Diambil
+              </span>
+</div>
+<p class="text-xs text-slate-400 font-medium mb-4">Ambil &amp; bayar langsung di toko</p>
+<div class="bg-slate-50 border border-slate-200/70 rounded-3xl p-5 mb-4">
+<div class="flex items-baseline justify-between">
+<div>
+<span class="text-4xl font-extrabold tracking-tight text-[#2C3E50]">3</span>
+<span class="text-base font-bold text-[#E74C3C] ml-1">Reservasi</span>
+</div>
+<span class="text-xs font-bold text-slate-600 bg-white px-2.5 py-1 rounded-full border border-slate-200">
+                  Est. Rp 45.700
+                </span>
+</div>
+<div id="chart-konsumen-reservations" class="relative h-28 mt-4"></div>
+</div>
+<div class="text-xs text-slate-600 flex items-center justify-between mb-4 px-1">
+<span class="">Siap diambil: <strong class="text-[#2C3E50]">2</strong> • Menunggu: <strong class="text-[#2C3E50]">1</strong></span>
+<span class="text-[#2C3E50] font-semibold">Ambil 12 mnt</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-2">
+<button class="w-full py-3 rounded-full bg-[#E74C3C] text-white font-bold text-xs hover:bg-[#D63031] transition flex items-center justify-center gap-1.5 shadow-sm">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+              Lihat Reservasi
+            </button>
+<button class="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2C3E50] font-bold text-xs transition">
+              Batalkan
+            </button>
+</div>
+</section>
+<!-- CARD 4: AKTIVITAS & RIWAYAT TERBARU -->
+<section class="card-bubble p-6 lg:col-span-7 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-5">
+<div>
+<h3 class="font-extrabold text-[#2C3E50] text-base">Aktivitas &amp; Riwayat Terbaru</h3>
+<p class="text-xs text-slate-400 font-medium">Reservasi, ulasan, dan pencarian terakhirmu</p>
+</div>
+<button class="text-xs font-bold text-[#E74C3C] hover:underline flex items-center gap-1">
+                Lihat Semua
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+<div class="space-y-3">
+<div class="p-3.5 rounded-2xl bg-slate-50/70 hover:bg-slate-100/70 transition flex items-center justify-between border border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-slate-200 text-[#2C3E50] font-bold flex items-center justify-center text-sm">
+                    🍜
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Indomie Goreng Reguler (2 bungkus)</h4>
+<p class="text-xs text-slate-500 font-medium">Reservasi • 10:30 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#2C3E50]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2C3E50]"></span>
+                    Siap Diambil
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#2C3E50] w-24 text-right">
+                    Rp 6.200
+                  </span>
+</div>
+</div>
+<div class="p-3.5 rounded-2xl bg-[#FDEAEA]/60 hover:bg-[#FDEAEA]/80 transition flex items-center justify-between border border-[#E74C3C]/20">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-[#FDEAEA] text-[#E74C3C] font-bold flex items-center justify-center text-sm">
+                    🥚
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Telur Ayam Ras 1kg (1 kg)</h4>
+<p class="text-xs text-slate-500 font-medium">Reservasi • 11:45 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#FDEAEA] text-[#E74C3C]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#E74C3C]"></span>
+                    Menunggu Toko
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#E74C3C] w-24 text-right">
+                    Rp 27.500
+                  </span>
+</div>
+</div>
+<div class="p-3.5 rounded-2xl bg-slate-50/70 hover:bg-slate-100/70 transition flex items-center justify-between border border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-slate-200 text-[#2C3E50] font-bold flex items-center justify-center text-sm">
+                    ⭐
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Ulasan Warung Bu Siti</h4>
+<p class="text-xs text-slate-500 font-medium">Ulasan • 09:20 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#2C3E50]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2C3E50]"></span>
+                    ★★★★★
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#2C3E50] w-24 text-right">
+                    Terkirim
+                  </span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">Sinkron dengan aktivitas Showcase &amp; Reservasi</span>
+<span class="font-semibold text-[#2C3E50]">Akurasi preferensi: 92%</span>
+</div>
+</section>
+<!-- CARD 5: REKOMENDASI TOKO & BARANG TERDEKAT -->
+<section class="card-bubble p-6 lg:col-span-5 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<span class="text-xs font-bold tracking-wider text-slate-400 uppercase">Rekomendasi Terdekat</span>
+<h3 class="font-extrabold text-[#2C3E50] text-base mt-0.5">Toko &amp; Barang di Sekitarmu</h3>
+</div>
+<span class="w-8 h-8 rounded-full bg-[#FDEAEA] text-[#E74C3C] flex items-center justify-center font-bold text-xs">
+                📍
+              </span>
+</div>
+<div class="flex items-baseline justify-between mb-5">
+<div>
+<span class="text-4xl font-extrabold tracking-tight text-[#E74C3C]">5</span>
+<span class="text-lg font-bold text-[#2C3E50] ml-1.5">Toko Terdekat</span>
+</div>
+<span class="text-xs font-semibold text-slate-400">Dalam radius 1 km</span>
+</div>
+<div class="bg-[#FDEAEA]/50 border border-[#E74C3C]/20 rounded-3xl p-4 mb-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-bold text-[#E74C3C] uppercase tracking-wider">Tersedia Sekarang</span>
+<div class="flex items-center -space-x-2">
+<div class="w-6 h-6 rounded-full bg-slate-300 text-[10px] font-bold text-slate-700 flex items-center justify-center border-2 border-white" title="Warung Bu Ani">BA</div>
+<div class="w-6 h-6 rounded-full bg-rose-200 text-[10px] font-bold text-[#E74C3C] flex items-center justify-center border-2 border-white" title="Warung Pak Dedi">PD</div>
+<div class="w-6 h-6 rounded-full bg-amber-200 text-[10px] font-bold text-amber-900 flex items-center justify-center border-2 border-white" title="Toko Maju">TM</div>
+<div class="w-6 h-6 rounded-full bg-[#2C3E50] text-[9px] font-bold text-white flex items-center justify-center border-2 border-white">+2</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs py-1.5 border-b border-[#E74C3C]/15">
+<span class="font-bold text-[#2C3E50]">Warung Bu Ani • 250 m</span>
+<span class="font-extrabold text-[#E74C3C] bg-[#FDEAEA] px-2 py-0.5 rounded-full">Rp 3.500</span>
+</div>
+<div class="flex items-center justify-between text-xs py-1.5 border-b border-[#E74C3C]/15">
+<span class="font-bold text-[#2C3E50]">Warung Pak Dedi • 420 m</span>
+<span class="font-extrabold text-[#E74C3C] bg-[#FDEAEA] px-2 py-0.5 rounded-full">Rp 3.200</span>
+</div>
+<div class="flex items-center justify-between text-xs py-1.5">
+<span class="font-bold text-[#2C3E50]">Toko Maju • 700 m</span>
+<span class="font-extrabold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">Rp 3.300</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 rounded-full bg-[#2C3E50] text-white font-bold text-xs hover:bg-[#1A252F] transition flex items-center justify-center gap-2">
+<svg class="w-4 h-4 text-[#E74C3C]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M12 21s-7-6.1-7-11a7 7 0 1 1 14 0c0 4.9-7 11-7 11z"></path>
+<circle cx="12" cy="10" r="2.5"></circle>
+</svg>
+            Buka Showcase &amp; Radius
+          </button>
+</section>
+</div>
+<!-- ================= PANEL ADMIN ================= -->
+<div class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5" data-role-panel="admin">
+<!-- CARD 1: RINGKASAN SISTEM WARLOK -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-bold tracking-wider text-slate-400 uppercase">Ringkasan Sistem WarLok</span>
+<span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#FDEAEA] text-[#E74C3C]">Live</span>
+</div>
+<div class="rounded-3xl p-6 bg-gradient-to-br from-[#2C3E50] via-[#243342] to-[#1A252F] text-white shadow-lg shadow-[#2C3E50]/25 relative overflow-hidden">
+<div class="absolute -right-8 -bottom-8 w-40 h-40 rounded-full bg-white/5 pointer-events-none"></div>
+<div class="absolute -right-2 -top-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-6">
+<div>
+<p class="text-[10px] font-semibold text-slate-300 uppercase tracking-widest">Platform Digital</p>
+<p class="text-base font-extrabold tracking-tight">WarLok System Card</p>
+</div>
+<div class="flex items-center gap-1.5 opacity-90">
+<div class="w-8 h-8 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<rect x="4" y="4" width="7" height="7" rx="1.5"></rect>
+<rect x="13" y="4" width="7" height="7" rx="1.5"></rect>
+<rect x="4" y="13" width="7" height="7" rx="1.5"></rect>
+<rect x="13" y="13" width="7" height="7" rx="1.5"></rect>
+</svg>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<p class="text-xs text-slate-300 font-medium mb-1">Total Pengguna Terdaftar</p>
+<div class="text-2xl font-extrabold tracking-tight">1.284 Pengguna</div>
+<div class="text-xs text-slate-300/90 font-medium mt-0.5">Merchant: 46 • Konsumen: 1.231 • Admin: 7 • Toko Aktif: 38</div>
+</div>
+<div class="w-full bg-black/25 h-2 rounded-full overflow-hidden mb-4 p-0.5">
+<div class="bg-[#E74C3C] h-full rounded-full" style="width: 82%"></div>
+</div>
+<div class="flex justify-between items-center text-[11px] font-semibold tracking-wider text-slate-300 pt-2 border-t border-white/10">
+<span class="">SISTEM • WARLOK</span>
+<span class="">ID: SYS-01</span>
+</div>
+</div>
+</div>
+<div class="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between">
+<div>
+<p class="text-xs font-semibold text-slate-500">Aktivitas Hari Ini</p>
+<p class="text-xl font-extrabold text-[#2C3E50] tracking-tight mt-0.5">+156 Aksi</p>
+</div>
+<div class="flex items-center gap-1 bg-[#FDEAEA] text-[#E74C3C] px-3 py-1.5 rounded-full text-xs font-bold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewBox="0 0 24 24">
+<polyline points="18 15 12 9 6 15"></polyline>
+</svg>
+<span class="">+6.4%</span>
+</div>
+</div>
+</section>
+<!-- CARD 2: TREN AKTIVITAS PLATFORM -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-extrabold text-[#2C3E50] text-base">Tren Aktivitas Platform</h3>
+<p class="text-xs text-slate-400 font-medium">Pendaftaran &amp; interaksi seluruh pengguna</p>
+</div>
+<div class="bg-slate-100 p-1 rounded-full flex text-xs font-bold">
+<button class="px-3 py-1 rounded-full bg-[#E74C3C] text-white shadow-sm transition">Bulanan</button>
+<button class="px-3 py-1 rounded-full text-slate-500 hover:text-[#2C3E50] transition">Tahunan</button>
+</div>
+</div>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="text-3xl font-extrabold text-[#2C3E50] tracking-tight">3.420</span>
+<span class="text-xs font-semibold text-slate-400">Aksi / Minggu</span>
+</div>
+<div id="chart-admin-activity" class="relative h-48 pt-4"></div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between text-xs text-slate-500 font-medium">
+<span class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-[#E74C3C]"></span> Puncak: Kamis (12.00–15.00)
+            </span>
+<span class="text-slate-400">Update 5 mnt lalu</span>
+</div>
+</section>
+<!-- CARD 3: VERIFIKASI MERCHANT -->
+<section class="card-bubble p-6 lg:col-span-4 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-2">
+<h3 class="font-extrabold text-[#2C3E50] text-base">Verifikasi Merchant</h3>
+<span class="text-xs font-bold px-2.5 py-1 rounded-full bg-[#FDEAEA] text-[#E74C3C] border border-[#E74C3C]/20 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#E74C3C]"></span>
+                Perlu Tinjauan
+              </span>
+</div>
+<p class="text-xs text-slate-400 font-medium mb-4">Pengajuan toko menunggu verifikasi berkas</p>
+<div class="bg-slate-50 border border-slate-200/70 rounded-3xl p-5 mb-4">
+<div class="flex items-baseline justify-between">
+<div>
+<span class="text-4xl font-extrabold tracking-tight text-[#2C3E50]">8</span>
+<span class="text-base font-bold text-[#E74C3C] ml-1">Pengajuan</span>
+</div>
+<span class="text-xs font-bold text-slate-600 bg-white px-2.5 py-1 rounded-full border border-slate-200">
+                  3 Menunggu
+                </span>
+</div>
+<div id="chart-admin-verification" class="relative h-28 mt-4"></div>
+<span class="">Diterima: <strong class="text-[#2C3E50]">42</strong> • Ditolak: <strong class="text-[#2C3E50]">4</strong></span>
+<span class="text-[#2C3E50] font-semibold">Rata-rata 1,4 hari</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-2">
+<button class="w-full py-3 rounded-full bg-[#E74C3C] text-white font-bold text-xs hover:bg-[#D63031] transition flex items-center justify-center gap-1.5 shadow-sm">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+              Tinjau
+            </button>
+<button class="w-full py-3 rounded-full bg-slate-100 hover:bg-slate-200 text-[#2C3E50] font-bold text-xs transition">
+              Lihat Semua
+            </button>
+</div>
+</section>
+<!-- CARD 4: AKTIVITAS TERBARU PLATFORM -->
+<section class="card-bubble p-6 lg:col-span-7 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-5">
+<div>
+<h3 class="font-extrabold text-[#2C3E50] text-base">Aktivitas Terbaru Platform</h3>
+<p class="text-xs text-slate-400 font-medium">Pendaftaran pengguna, toko, reservasi &amp; ulasan</p>
+</div>
+<button class="text-xs font-bold text-[#E74C3C] hover:underline flex items-center gap-1">
+                Lihat Semua
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+</div>
+<div class="space-y-3">
+<div class="p-3.5 rounded-2xl bg-slate-50/70 hover:bg-slate-100/70 transition flex items-center justify-between border border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-slate-200 text-[#2C3E50] font-bold flex items-center justify-center text-sm">
+                    👤
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Pendaftaran pengguna baru (12)</h4>
+<p class="text-xs text-slate-500 font-medium">Pengguna • 10:30 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#2C3E50]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2C3E50]"></span>
+                    Konsumen
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#2C3E50] w-24 text-right">
+                    +12
+                  </span>
+</div>
+</div>
+<div class="p-3.5 rounded-2xl bg-[#FDEAEA]/60 hover:bg-[#FDEAEA]/80 transition flex items-center justify-between border border-[#E74C3C]/20">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-[#FDEAEA] text-[#E74C3C] font-bold flex items-center justify-center text-sm">
+                    🏪
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Pengajuan toko Sembako Berkah Jaya</h4>
+<p class="text-xs text-slate-500 font-medium">Merchant • 11:45 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#FDEAEA] text-[#E74C3C]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#E74C3C]"></span>
+                    Menunggu
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#E74C3C] w-24 text-right">
+                    1 Toko
+                  </span>
+</div>
+</div>
+<div class="p-3.5 rounded-2xl bg-slate-50/70 hover:bg-slate-100/70 transition flex items-center justify-between border border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-slate-200 text-[#2C3E50] font-bold flex items-center justify-center text-sm">
+                    🛒
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Reservasi WLK-8821 dibuat</h4>
+<p class="text-xs text-slate-500 font-medium">Reservasi • 10:15 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#2C3E50]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#2C3E50]"></span>
+                    Aktif
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#2C3E50] w-24 text-right">
+                    45 Antrean
+                  </span>
+</div>
+</div>
+<div class="p-3.5 rounded-2xl bg-slate-50/70 hover:bg-slate-100/70 transition flex items-center justify-between border border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-2xl bg-slate-200 text-[#2C3E50] font-bold flex items-center justify-center text-sm">
+                    ⭐
+                  </div>
+<div>
+<h4 class="text-sm font-bold text-[#2C3E50]">Ulasan &amp; laporan stok masuk (7)</h4>
+<p class="text-xs text-slate-500 font-medium">Ulasan • 09:50 WIB</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#FDEAEA] text-[#E74C3C]">
+<span class="w-1.5 h-1.5 rounded-full bg-[#E74C3C]"></span>
+                    Perlu Moderasi
+                  </span>
+<span class="text-xs md:text-sm font-extrabold text-[#E74C3C] w-24 text-right">
+                    2 Laporan
+                  </span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+<span class="">Diperbarui otomatis dari aktivitas semua role</span>
+<span class="font-semibold text-[#2C3E50]">Data demonstrasi</span>
+</div>
+</section>
+<!-- CARD 5: PERINGATAN & MODERASI -->
+<section class="card-bubble p-6 lg:col-span-5 flex flex-col justify-between hover:shadow-lg transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-4">
+<div>
+<span class="text-xs font-bold tracking-wider text-slate-400 uppercase">Peringatan &amp; Moderasi</span>
+<h3 class="font-extrabold text-[#2C3E50] text-base mt-0.5">Laporan Menunggu Tinjauan</h3>
+</div>
+<span class="w-8 h-8 rounded-full bg-[#FDEAEA] text-[#E74C3C] flex items-center justify-center font-bold text-xs">
+                ⚠️
+              </span>
+</div>
+<div class="flex items-baseline justify-between mb-5">
+<div>
+<span class="text-4xl font-extrabold tracking-tight text-[#E74C3C]">5</span>
+<span class="text-lg font-bold text-[#2C3E50] ml-1.5">Laporan</span>
+</div>
+<span class="text-xs font-semibold text-slate-400">Perlu ditinjau hari ini</span>
+</div>
+<div class="bg-[#FDEAEA]/50 border border-[#E74C3C]/20 rounded-3xl p-4 mb-4">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-bold text-[#E74C3C] uppercase tracking-wider">Perlu Perhatian Admin</span>
+<div class="flex items-center -space-x-2">
+<div class="w-6 h-6 rounded-full bg-slate-300 text-[10px] font-bold text-slate-700 flex items-center justify-center border-2 border-white" title="Moderator 1">M1</div>
+<div class="w-6 h-6 rounded-full bg-rose-200 text-[10px] font-bold text-[#E74C3C] flex items-center justify-center border-2 border-white" title="Moderator 2">M2</div>
+<div class="w-6 h-6 rounded-full bg-amber-200 text-[10px] font-bold text-amber-900 flex items-center justify-center border-2 border-white" title="Moderator 3">M3</div>
+<div class="w-6 h-6 rounded-full bg-[#2C3E50] text-[9px] font-bold text-white flex items-center justify-center border-2 border-white">+2</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between text-xs py-1.5 border-b border-[#E74C3C]/15">
+<span class="font-bold text-[#2C3E50]">Stok fiktif Gas LPG 3kg</span>
+<span class="font-extrabold text-[#E74C3C] bg-[#FDEAEA] px-2 py-0.5 rounded-full">8 Laporan</span>
+</div>
+<div class="flex items-center justify-between text-xs py-1.5 border-b border-[#E74C3C]/15">
+<span class="font-bold text-[#2C3E50]">Toko menunggu verifikasi</span>
+<span class="font-extrabold text-[#E74C3C] bg-[#FDEAEA] px-2 py-0.5 rounded-full">3 Toko</span>
+</div>
+<div class="flex items-center justify-between text-xs py-1.5">
+<span class="font-bold text-[#2C3E50]">Ulasan negatif berulang</span>
+<span class="font-extrabold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">2 Ulasan</span>
+</div>
+</div>
+</div>
+</div>
+<button class="w-full py-3 rounded-full bg-[#2C3E50] text-white font-bold text-xs hover:bg-[#1A252F] transition flex items-center justify-center gap-2">
+<svg class="w-4 h-4 text-[#E74C3C]" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M12 9v4"></path>
+<path d="M12 17h.01"></path>
+<path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path>
+</svg>
+            Buka Panel Moderasi
+          </button>
+</section>
+</div>
 </main>
 </div>
 
+<!-- ================= MODAL DETAIL CARD ================= -->
+<div id="cardModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-[#2C3E50]/60 backdrop-blur-sm" id="modalBackdrop"></div>
+  
+  <!-- Panel -->
+  <div class="relative bg-white rounded-[32px] border border-slate-200 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden modal-panel">
+    <!-- Header -->
+    <div class="p-6 pb-4 border-b border-slate-100 flex items-center justify-between">
+      <div>
+        <h2 id="modalTitle" class="text-xl font-extrabold text-[#2C3E50]">Detail Dashboard</h2>
+        <p id="modalSubtitle" class="text-xs text-slate-500 font-medium">Informasi lengkap performa WarLok</p>
+      </div>
+      <button id="modalClose" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M18 6L6 18M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Body -->
+    <div id="modalBody" class="p-6 pt-5 overflow-y-auto flex-1 custom-scrollbar">
+      <!-- Content injected by JS -->
+    </div>
 
+    <!-- Footer -->
+    <div class="p-5 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+      <button id="modalCloseBtn" class="px-6 py-2.5 rounded-full bg-[#2C3E50] text-white font-bold text-xs hover:bg-[#1A252F] transition shadow-sm">
+        Tutup Detail
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
+  
+  /* Chart tooltip */
+  .chart-tip {
+    position: fixed;
+    pointer-events: none;
+    background: #2C3E50;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    z-index: 60;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    white-space: nowrap;
+  }
+  
+  .card-bubble { cursor: pointer; }
+</style>
+
+  <!-- SCRIPT PERGANTIAN ROLE & TOGGLE -->
+  <script>
+    const ROLE_PANEL_ATTR = 'data-role-panel';
+    const VALID_ROLES = ['merchant', 'konsumen', 'admin'];
+
+    function normalizeRole(role) {
+      return VALID_ROLES.includes(role) ? role : 'merchant';
+    }
+
+    // Tentukan role saat dashboard pertama kali dimuat di iframe.
+    // Shell tidak mengirim role saat load, jadi role dibaca dari parent bila
+    // same-origin (localhost / http). Bila diblokir, fallback ke merchant.
+    function detectInitialRole() {
+      try {
+        const fromQuery = new URLSearchParams(window.location.search).get('role');
+        if (fromQuery) return normalizeRole(fromQuery);
+      } catch (e) {}
+
+      try {
+        const fromParent = window.parent.eval('currentRole');
+        if (fromParent) return normalizeRole(fromParent);
+      } catch (e) {}
+
+      try {
+        const label = window.parent.document.getElementById('labelRoleSidebar');
+        const text = ((label && label.textContent) || '').toUpperCase();
+        if (text.includes('ADMIN')) return 'admin';
+        if (text.includes('KONSUMEN')) return 'konsumen';
+        if (text.includes('WARUNG')) return 'merchant';
+      } catch (e) {}
+
+      return 'merchant';
+    }
+
+    let activeRole = null;
+    let roleToken = 0;
+
+    function prefersReducedMotion() {
+      return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    function staggerPanel(panel) {
+      if (!panel || prefersReducedMotion()) return;
+      panel.querySelectorAll('.card-bubble').forEach(function(card, i) {
+        card.classList.remove('anim-fade-up');
+        card.style.animationDelay = (i * 70) + 'ms';
+        void card.offsetWidth;
+        card.classList.add('anim-fade-up');
+      });
+    }
+
+    function parseCountText(text) {
+      const match = text.match(/^(\D*)([\d.,]+)(.*)$/s);
+      if (!match) return null;
+      const prefix = match[1];
+      const numStr = match[2];
+      const suffix = match[3];
+
+      let decimals = 0;
+      let target = 0;
+      if (numStr.includes(',') && numStr.includes('.')) {
+        decimals = (numStr.split(',')[1] || '').length;
+        target = Number(numStr.replace(/\./g, '').replace(',', '.'));
+      } else if (numStr.includes(',')) {
+        decimals = (numStr.split(',')[1] || '').length;
+        target = Number(numStr.replace(',', '.'));
+      } else {
+        const parts = numStr.split('.');
+        if (parts.length > 2) {
+          decimals = 0;
+          target = Number(parts.join(''));
+        } else if (parts.length === 2) {
+          const dec = parts[1];
+          if (dec.length === 3 && parts[0].length > 0) {
+            decimals = 0;
+            target = Number(parts.join(''));
+          } else {
+            decimals = dec.length;
+            target = Number(numStr);
+          }
+        } else {
+          decimals = 0;
+          target = Number(numStr);
+        }
+      }
+
+      if (!isFinite(target)) return null;
+      return { prefix: prefix, suffix: suffix, target: target, decimals: decimals };
+    }
+
+    function animateCount(el) {
+      if (!el || prefersReducedMotion()) return;
+      const original = el.textContent;
+      const parsed = parseCountText(original);
+      if (!parsed) return;
+      const duration = 650;
+      const start = performance.now();
+      function format(v) {
+        if (parsed.decimals > 0) return parsed.prefix + v.toFixed(parsed.decimals) + parsed.suffix;
+        return parsed.prefix + Math.round(v).toLocaleString('id-ID') + parsed.suffix;
+      }
+      el.textContent = format(0);
+      function step(now) {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const value = parsed.target * eased;
+        el.textContent = format(value);
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function animateStats(panel) {
+      if (!panel) return;
+      const selector = '.text-xl.font-extrabold, .text-2xl.font-extrabold, .text-3xl.font-extrabold, .text-4xl.font-extrabold, .text-lg.font-extrabold';
+      panel.querySelectorAll(selector).forEach(function(el) {
+        animateCount(el);
+      });
+    }
+
+    function animateProgress(panel) {
+      if (!panel || prefersReducedMotion()) return;
+      panel.querySelectorAll('.progress-fill').forEach(function(bar, i) {
+        const target = bar.dataset.target || bar.style.width || '0%';
+        bar.style.width = '0%';
+        bar.offsetWidth;
+        setTimeout(function() {
+          bar.style.width = target;
+        }, 100 + i * 150);
+      });
+    }
+
+    function animateChartBars(container) {
+      if (!container || prefersReducedMotion()) return;
+      container.querySelectorAll('rect.bar-rect').forEach(function(rect, i) {
+        rect.classList.remove('anim-bar-rise');
+        rect.style.animationDelay = (i * 40) + 'ms';
+        void rect.getBoundingClientRect();
+        rect.classList.add('anim-bar-rise');
+      });
+    }
+
+    function animatePanelCharts(panel) {
+      if (!panel) return;
+      panel.querySelectorAll('[id^="chart-"]').forEach(function(container) {
+        animateChartBars(container);
+      });
+    }
+
+    function applyRole(role, animate) {
+      role = normalizeRole(role);
+      if (animate === undefined) animate = true;
+      const reduce = prefersReducedMotion();
+      const swap = function() {
+        document.querySelectorAll(`[${ROLE_PANEL_ATTR}]`).forEach(function(el) {
+          const isMatch = el.getAttribute(ROLE_PANEL_ATTR) === role;
+          el.classList.toggle('hidden', !isMatch);
+          el.style.display = isMatch ? 'grid' : 'none';
+        });
+        document.title = {
+          merchant: 'WarLok - Dasbor Pemilik Warung Barokah',
+          konsumen: 'WarLok - Ringkasan Aktivitas Konsumen',
+          admin: 'WarLok - Ringkasan Sistem WarLok'
+        }[role];
+        const panel = document.querySelector(`[${ROLE_PANEL_ATTR}="${role}"]`);
+        if (panel) {
+          if (animate && !reduce) staggerPanel(panel);
+          requestAnimationFrame(function() {
+            animateStats(panel);
+            animateProgress(panel);
+            animatePanelCharts(panel);
+          });
+        }
+        activeRole = role;
+      };
+
+      if (animate && !reduce && activeRole && activeRole !== role) {
+        const token = ++roleToken;
+        const oldPanel = document.querySelector(`[${ROLE_PANEL_ATTR}="${activeRole}"]`);
+        if (oldPanel) {
+          oldPanel.classList.add('role-transition-out');
+          setTimeout(function() {
+            if (token !== roleToken) return;
+            oldPanel.classList.remove('role-transition-out');
+            swap();
+          }, 180);
+          return;
+        }
+      }
+      swap();
+    }
+
+    // Listen for role changes from the parent shell (index.html)
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.tipe === 'GANTI_ROLE') {
+        applyRole(event.data.role);
+      }
+    });
+
+    // === Data & Charting ===
+    const CHART_CONFIGS = {
+      'chart-merchant-visits': { labels:['Sen','Sel','Rab','Kam','Jum','Sab','Min'], series:[{name:'Pengunjung',values:[172,140,218,340,286,162,110]}], height:180, period:'Mingguan' },
+      'chart-merchant-reservations': { labels:['Sen','Sel','Rab','Kam','Jum','Sab','Min'], series:[{name:'Reservasi',values:[38,45,41,52,47,45,45]}], height:112, period:'7 hari terakhir' },
+      'chart-konsumen-search': { labels:['Sen','Sel','Rab','Kam','Jum','Sab','Min'], series:[{name:'Pencarian',values:[9,13,7,19,15,13,10]}], height:180, period:'Mingguan' },
+      'chart-konsumen-reservations': { labels:['Sen','Sel','Rab','Kam','Jum','Sab','Min'], series:[{name:'Reservasi',values:[1,2,1,3,2,2,1]}], height:112, period:'7 hari terakhir' },
+      'chart-admin-activity': { labels:['Sen','Sel','Rab','Kam','Jum','Sab','Min'], series:[{name:'Aksi',values:[410,550,320,820,700,470,150]}], height:180, period:'Mingguan' },
+      'chart-admin-verification': { labels:['Jun','Jul','Agu','Sep','Okt','Nov'], series:[
+        {name:'Diajukan', values:[4,5,6,7,8,12], color:'#2C3E50'},
+        {name:'Diterima', values:[2,3,4,5,6,8], color:'#94A3B8'},
+        {name:'Ditolak', values:[1,1,0,1,1,0], color:'#E74C3C'}
+      ], height:128, period:'6 bulan terakhir' },
+      'chart-revenue': { labels:['Sen','Sel','Rab','Kam','Jum','Sab','Min'], series:[{name:'Pendapatan',values:[380000,420000,450000,390000,510000,470000,450000]}], height:160, period:'7 hari terakhir', format: v => 'Rp ' + v.toLocaleString('id-ID'), valueFormat: v => (v/1000) + 'rb' },
+      'chart-growth': { labels:['Jun','Jul','Agu','Sep','Okt','Nov'], series:[{name:'Pengguna',values:[980,1040,1100,1160,1220,1284]}], height:160, period:'6 bulan terakhir' }
+    };
+
+    function niceMax(value) {
+      if (value <= 5) return 5;
+      const step = value <= 50 ? 5 : value <= 500 ? 50 : (value <= 5000 ? 500 : 1000);
+      return Math.ceil(value / step) * step;
+    }
+
+    function formatValue(value) {
+      return value >= 1000 ? (value / 1000).toFixed(value % 1000 === 0 ? 0 : 1) + 'k' : String(value);
+    }
+
+    function renderChart(id, cfg) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const W = 360;
+      const H = cfg.height || 180;
+      const padL = 30, padR = 6;
+      const padT = cfg.series.length > 1 ? 34 : 16;
+      const padB = 22;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+      const labels = cfg.labels;
+      const series = cfg.series;
+      const max = niceMax(Math.max.apply(null, series.flatMap(s => s.values).concat([1])));
+
+      const uid = 'chart-' + Math.random().toString(36).slice(2, 8);
+      let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" class="w-full h-full" preserveAspectRatio="xMidYMid meet" role="img">' +
+        '<defs><pattern id="' + uid + '-stripe" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">' +
+        '<rect width="6" height="6" fill="#F1F5F9"/><line x1="0" y1="0" x2="0" y2="6" stroke="#E2E8F0" stroke-width="3"/></pattern></defs>';
+
+      for (let i = 0; i <= 4; i++) {
+        const y = padT + plotH * (i / 4);
+        svg += '<line x1="' + padL + '" y1="' + y + '" x2="' + (W - padR) + '" y2="' + y + '" stroke="#F1F5F9" stroke-width="1"/>';
+        svg += '<text x="' + (padL - 4) + '" y="' + (y + 3) + '" text-anchor="end" font-size="8" fill="#94A3B8">' + formatValue(Math.round(max * (1 - i / 4))) + '</text>';
+      }
+
+      if (series.length > 1) {
+        let lx = padL;
+        series.forEach(function(s) {
+          svg += '<rect x="' + lx + '" y="8" width="8" height="8" rx="2" fill="' + (s.color || '#2C3E50') + '"/>';
+          svg += '<text x="' + (lx + 12) + '" y="15" font-size="9" font-weight="600" fill="#2C3E50">' + s.name + '</text>';
+          lx += 14 + s.name.length * 5.4 + 10;
+        });
+      }
+
+      const groupW = plotW / labels.length;
+      const barW = (groupW * 0.62) / series.length;
+
+      labels.forEach(function(label, i) {
+        const gx = padL + groupW * i;
+        svg += '<text x="' + (gx + groupW / 2) + '" y="' + (H - 5) + '" text-anchor="middle" font-size="8.5" fill="#94A3B8">' + label + '</text>';
+
+        series.forEach(function(s, si) {
+          const value = s.values[i] || 0;
+          const h = (value / max) * plotH;
+          const x = gx + (groupW - barW * series.length) / 2 + barW * si;
+          const y = padT + plotH - h;
+          const peak = series.length === 1 && value === Math.max.apply(null, s.values);
+          const fill = peak ? '#E74C3C' : (s.color || 'url(#' + uid + '-stripe)');
+          const valStr = cfg.format ? cfg.format(value) : value;
+          const tip = label + (series.length > 1 ? ' \u2022 ' + s.name : '') + ': ' + valStr;
+
+          svg += '<rect class="bar-rect" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + Math.max(barW - 2, 2).toFixed(1) + '" height="' + Math.max(h, 0).toFixed(1) + '" rx="3" fill="' + fill + '" data-tip="' + tip + '"><title>' + tip + '</title></rect>';
+
+          if (series.length === 1 && labels.length <= 8 && value > 0) {
+            const dispVal = cfg.valueFormat ? cfg.valueFormat(value) : value;
+            svg += '<text x="' + (x + barW / 2 - 1).toFixed(1) + '" y="' + (y - 3).toFixed(1) + '" text-anchor="middle" font-size="7.5" font-weight="700" fill="#2C3E50">' + dispVal + '</text>';
+          }
+        });
+      });
+
+      svg += '</svg>';
+      el.innerHTML = svg;
+
+      let tipEl = document.getElementById('chartTooltip');
+      if (!tipEl) {
+        tipEl = document.createElement('div');
+        tipEl.id = 'chartTooltip';
+        tipEl.className = 'chart-tip hidden';
+        document.body.appendChild(tipEl);
+      }
+
+      el.querySelectorAll('rect[data-tip]').forEach(function(rect) {
+        rect.style.cursor = 'pointer';
+        rect.addEventListener('mouseenter', function() {
+          tipEl.textContent = rect.getAttribute('data-tip');
+          tipEl.classList.remove('hidden');
+          const box = rect.getBoundingClientRect();
+          tipEl.style.left = (box.left + box.width / 2) + 'px';
+          tipEl.style.top = (box.top - 28) + 'px';
+        });
+        rect.addEventListener('mouseleave', function() {
+          tipEl.classList.add('hidden');
+        });
+      });
+    }
+
+    Object.keys(CHART_CONFIGS).forEach(function(id) {
+      renderChart(id, CHART_CONFIGS[id]);
+    });
+
+    // === Modal Detail Card ===
+    const CHART_BY_CARD = {
+      merchant: ['chart-revenue','chart-merchant-visits','chart-merchant-reservations',null,null],
+      konsumen: [null,'chart-konsumen-search','chart-konsumen-reservations',null,null],
+      admin: ['chart-growth','chart-admin-activity','chart-admin-verification',null,null]
+    };
+    const CARD_DATA = {
+      merchant: {
+        'card-0': { title:'Ringkasan Aktivitas Merchant', value:'Rp 1.200.000', sub:'Pendapatan Hari Ini', items:[
+          {k:'Total Omzet', v:'Rp 12.850.000'}, {k:'Target Bulan Ini', v:'Rp 20.000.000'},
+          {k:'Pencapaian Target', v:'64.25%'}, {k:'Pendapatan Hari Ini', v:'+Rp 450.000'}
+        ], list:[] },
+        'card-1': { title:'Tren Kunjungan Mahasiswa', value:'1.428', sub:'Pengunjung / Minggu', items:[
+          {k:'Hari Tersibuk', v:'Kamis (340)'}, {k:'Rata-rata / Hari', v:'204'},
+          {k:'Produk Teratas', v:'Indomie Goreng'}, {k:'Sumber Data', v:'Pencarian stok terdekat'}
+        ], chart:'chart-merchant-visits', list:[
+          {k:'Indomie Goreng', v:'412 pencarian'}, {k:'Telur Ayam 1kg', v:'286 pencarian'}, {k:'Air Mineral 600ml', v:'198 pencarian'}
+        ] },
+        'card-2': { title:'Antrean Reservasi Aktif', value:'45', sub:'Pesanan', items:[
+          {k:'Estimasi Nilai', v:'Rp 680.000'}, {k:'Rata-rata Tunggu', v:'12 menit'},
+          {k:'Tepat Waktu', v:'96%'}, {k:'Status', v:'Siap Diambil'}
+        ], chart:'chart-merchant-reservations', list:[
+          {k:'WLK-8821', v:'Rian \u2022 Indomie x5 \u2022 Rp 15.500 \u2022 12:15'},
+          {k:'WLK-8822', v:'Siti \u2022 Telur 1kg \u2022 Rp 27.500 \u2022 12:25'},
+          {k:'WLK-8823', v:'Bayu \u2022 Beras 5kg \u2022 Rp 69.500 \u2022 12:40'}
+        ] },
+        'card-3': { title:'Aktivitas Terbaru & Validasi Komunitas', value:'12', sub:'Laporan Hari Ini', items:[
+          {k:'Laporan Masuk', v:'12'}, {k:'Sesuai', v:'9'}, {k:'Kosong', v:'3'}
+        ], list:[
+          {k:'Indomie Goreng', v:'Laporan: Sesuai \u2022 10:30'},
+          {k:'Gas Elpiji 3kg', v:'Laporan: Kosong \u2022 11:45'},
+          {k:'Air Mineral', v:'Laporan: Sesuai \u2022 10:15'},
+          {k:'Tolak Angin', v:'Laporan: Menipis \u2022 09:40'}
+        ] },
+        'card-4': { title:'Peringatan Kebutuhan Stok', value:'4', sub:'Barang Urgent', items:[
+          {k:'Total Item', v:'4'}, {k:'Stok Menipis', v:'2'}, {k:'Stok Habis', v:'2'}
+        ], list:[
+          {k:'Tolak Angin Cair', v:'Sisa 2 Sachet (Min: 10)'},
+          {k:'Telur Ayam', v:'Sisa 0.5 Kg (Min: 5 Kg)'},
+          {k:'Beras Ramos', v:'Sisa 1 Karung (Min: 5)'}
+        ] }
+      },
+      konsumen: {
+        'card-0': { title:'Ringkasan Aktivitas Konsumen', value:'18', sub:'Total Reservasi', items:[
+          {k:'Reservasi Aktif', v:'3'}, {k:'Ulasan', v:'11'}, {k:'Selesai', v:'15'}, {k:'Pencarian', v:'342'}
+        ], list:[
+          {k:'10:30', v:'Reservasi Indomie x2'}, {k:'11:45', v:'Reservasi Telur 1kg'}, {k:'09:20', v:'Ulasan Warung Bu Siti'}
+        ] },
+        'card-1': { title:'Tren Pencarian Barang', value:'86', sub:'Pencarian / Minggu', items:[
+          {k:'Hari Tersibuk', v:'Kamis (19)'}, {k:'Rata-rata / Hari', v:'12'},
+          {k:'Kategori Teratas', v:'Makanan instan'}, {k:'Produk Teratas', v:'Indomie Goreng'}
+        ], chart:'chart-konsumen-search', list:[
+          {k:'Makanan instan', v:'38 (44%)'}, {k:'Bahan pokok', v:'24 (28%)'}, {k:'Minuman', v:'16 (19%)'}
+        ] },
+        'card-2': { title:'Reservasi Saya', value:'3', sub:'Reservasi Aktif', items:[
+          {k:'Siap Diambil', v:'2'}, {k:'Menunggu', v:'1'}, {k:'Estimasi', v:'Rp 45.700'}, {k:'Ambil', v:'12 menit'}
+        ], chart:'chart-konsumen-reservations', list:[
+          {k:'WLK-7702', v:'Bu Siti \u2022 Indomie x2 \u2022 Rp 6.200 \u2022 12:15'},
+          {k:'WLK-7703', v:'Bu Siti \u2022 Telur 1kg \u2022 Rp 27.500 \u2022 12:45'},
+          {k:'WLK-7704', v:'Pak Dedi \u2022 Air 600ml x4 \u2022 Rp 12.000 \u2022 13:00'}
+        ] },
+        'card-3': { title:'Aktivitas & Riwayat Terbaru', value:'12', sub:'Aktivitas', items:[
+          {k:'Reservasi', v:'3'}, {k:'Ulasan', v:'1'}, {k:'Pencarian', v:'4'}, {k:'Total', v:'24'}
+        ], list:[
+          {k:'Indomie Goreng', v:'Siap Diambil \u2022 10:30'},
+          {k:'Telur Ayam', v:'Menunggu Toko \u2022 11:45'},
+          {k:'Ulasan', v:'Bintang 5 \u2022 09:20'}
+        ] },
+        'card-4': { title:'Rekomendasi Toko & Barang Terdekat', value:'5', sub:'Toko Terdekat', items:[
+          {k:'Radius', v:'1 km'}, {k:'Produk Tersedia', v:'128'}, {k:'Harga Rata-rata', v:'Rp 18.400'}
+        ], list:[
+          {k:'Warung Bu Ani', v:'250 m \u2022 Rp 3.500'},
+          {k:'Warung Pak Dedi', v:'420 m \u2022 Rp 3.200'},
+          {k:'Toko Maju', v:'700 m \u2022 Rp 3.300'},
+          {k:'Kos Asri', v:'1.2 km \u2022 Rp 3.500'}
+        ] }
+      },
+      admin: {
+        'card-0': { title:'Ringkasan Sistem WarLok', value:'1.284', sub:'Total Pengguna', items:[
+          {k:'Merchant', v:'46'}, {k:'Konsumen', v:'1.231'}, {k:'Admin', v:'7'}, {k:'Toko Aktif', v:'38'}
+        ], chart:'chart-growth', list:[] },
+        'card-1': { title:'Tren Aktivitas Platform', value:'3.420', sub:'Aksi / Minggu', items:[
+          {k:'Hari Tersibuk', v:'Kamis (820)'}, {k:'Rata-rata / Hari', v:'489'},
+          {k:'Transaksi', v:'512'}, {k:'Pendaftaran', v:'32'}
+        ], chart:'chart-admin-activity', list:[] },
+        'card-2': { title:'Verifikasi Merchant', value:'8', sub:'Pengajuan', items:[
+          {k:'Menunggu', v:'3'}, {k:'Diterima', v:'42'}, {k:'Ditolak', v:'4'}, {k:'Rata-rata', v:'1,4 hari'}
+        ], chart:'chart-admin-verification', list:[
+          {k:'Berkah Jaya', v:'Hendra \u2022 12 Nov \u2022 Menunggu'},
+          {k:'Warung Bu Siti', v:'Siti Aminah \u2022 28 Okt \u2022 Diterima'},
+          {k:'Toko Makmur', v:'Joko \u2022 25 Okt \u2022 Diterima'}
+        ] },
+        'card-3': { title:'Aktivitas Terbaru Platform', value:'12', sub:'Aktivitas Hari Ini', items:[
+          {k:'Pengguna', v:'12'}, {k:'Toko', v:'1'}, {k:'Reservasi', v:'45'}, {k:'Ulasan', v:'7'}
+        ], list:[
+          {k:'Pendaftaran', v:'Konsumen baru \u2022 10:30'},
+          {k:'Pengajuan Toko', v:'Sembako Berkah Jaya \u2022 11:45'},
+          {k:'Reservasi', v:'WLK-8821 \u2022 10:15'}
+        ] },
+        'card-4': { title:'Peringatan & Moderasi', value:'5', sub:'Laporan', items:[
+          {k:'Perlu Tinjauan', v:'3'}, {k:'Selesai Hari Ini', v:'2'}, {k:'Rata-rata Respons', v:'3,2 jam'}
+        ], list:[
+          {k:'Stok fiktif Gas LPG 3kg', v:'8 laporan'},
+          {k:'Toko menunggu verifikasi', v:'3 toko'},
+          {k:'Ulasan negatif berulang', v:'2 ulasan'}
+        ] }
+      }
+    };
+
+    const modal = document.getElementById('cardModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSub = document.getElementById('modalSubtitle');
+    const modalBody = document.getElementById('modalBody');
+
+    function openCard(role, cardId, chartId) {
+      const data = CARD_DATA[role] && CARD_DATA[role][cardId];
+      if (!data) return;
+
+      modalTitle.textContent = data.title;
+      modalSub.textContent = data.sub;
+
+      let html = '<div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-4 mb-4 flex items-baseline justify-between">' +
+        '<div><p class="text-[10px] uppercase text-slate-400 font-bold tracking-wider">' + data.sub + '</p>' +
+        '<p class="text-3xl font-extrabold text-[#2C3E50] tracking-tight">' + data.value + '</p></div>' +
+        '<span class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#FDEAEA] text-[#E74C3C]">' + role.toUpperCase() + '</span></div>';
+
+      if (data.items && data.items.length) {
+        html += '<div class="grid grid-cols-2 gap-3 mb-4">' + data.items.map(function(item) {
+          return '<div class="rounded-2xl bg-white border border-slate-200 p-3"><p class="text-[10px] font-bold uppercase tracking-wider text-slate-400">' + item.k + '</p><p class="text-lg font-extrabold text-[#2C3E50] mt-0.5">' + item.v + '</p></div>';
+        }).join('') + '</div>';
+      }
+
+      if (chartId && CHART_CONFIGS[chartId]) {
+        const modalChartId = 'modal-' + chartId;
+        const cfg = CHART_CONFIGS[chartId];
+        html += '<div class="mb-4"><p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2">Tren Data \u2022 ' + (cfg.period || '') + '</p>' +
+          '<div id="' + modalChartId + '" class="relative h-40"></div></div>';
+      }
+
+      if (data.list && data.list.length) {
+        html += '<div><p class="text-xs font-bold text-[#2C3E50] mb-2">Detail Riwayat / Daftar</p><div class="space-y-2">' +
+          data.list.map(function(item) {
+            return '<div class="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-100 px-3 py-2"><span class="text-xs font-bold text-[#2C3E50]">' + item.k + '</span><span class="text-[11px] font-semibold text-slate-500">' + item.v + '</span></div>';
+          }).join('') + '</div></div>';
+      }
+
+      html += '<p class="text-[10px] text-slate-400 font-medium mt-4">Data demonstrasi WarLok Analitik. Bukan data real-time.</p>';
+
+      modalBody.innerHTML = html;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      modalBody.scrollTop = 0;
+      requestAnimationFrame(function() {
+        modal.classList.add('modal-open');
+      });
+      animateStats(modalBody);
+
+      if (chartId && CHART_CONFIGS[chartId]) {
+        const modalChartId = 'modal-' + chartId;
+        renderChart(modalChartId, CHART_CONFIGS[chartId]);
+        requestAnimationFrame(function() {
+          animateChartBars(document.getElementById(modalChartId));
+        });
+      }
+    }
+
+    function closeModal() {
+      if (modal.classList.contains('hidden')) return;
+      modal.classList.remove('modal-open');
+      setTimeout(function() {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+      }, 220);
+    }
+
+    document.getElementById('modalClose').onclick = closeModal;
+    document.getElementById('modalCloseBtn').onclick = closeModal;
+    document.getElementById('modalBackdrop').onclick = closeModal;
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    document.querySelectorAll('.card-bubble').forEach(function(card) {
+      const panel = card.closest('[data-role-panel]');
+      if (!panel) return;
+      const role = panel.getAttribute('data-role-panel');
+      const cards = Array.prototype.slice.call(panel.querySelectorAll('.card-bubble'));
+      const index = cards.indexOf(card);
+      const cardId = 'card-' + index;
+
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+
+      function activate(e) {
+        if (e.target.closest('button, a, input, select, textarea')) return;
+        const chartId = (CHART_BY_CARD[role] || [])[index] || null;
+        openCard(role, cardId, chartId);
+      }
+
+      card.addEventListener('click', activate);
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          activate(e);
+        }
+      });
+    });
+
+    // === Init progress bars (for animation) ===
+    document.querySelectorAll('[data-role-panel]').forEach(function(panel) {
+      panel.querySelectorAll('div').forEach(function(d) {
+        if (d.parentElement && String(d.parentElement.className).indexOf('bg-black/25') !== -1 && d.style && d.style.width) {
+          d.classList.add('progress-fill');
+          d.dataset.target = d.style.width;
+          d.style.width = '0%';
+        }
+      });
+    });
+
+    // === Initial render (animate cards, no cross-role transition) ===
+    applyRole(detectInitialRole(), true);
+  </script>
 </body></html>
